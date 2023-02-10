@@ -20,17 +20,17 @@
   </BasicTable>
 </template>
 <script lang="ts">
-  import { defineComponent, ref } from 'vue';
-  import { BasicTable, useTable } from '/@/components/Table';
-  import { getBasicColumns, getFormConfig } from './tableData';
-  import { Alert } from 'ant-design-vue';
+  import { defineComponent, ref } from 'vue'
+  import { BasicTable, useTable } from '/@/components/Table'
+  import { getBasicColumns, getFormConfig } from './tableData'
+  import { Alert } from 'ant-design-vue'
 
-  import { demoListApi } from '/@/api/demo/table';
+  import { demoListApi } from '/@/api/demo/table'
 
   export default defineComponent({
     components: { BasicTable, AAlert: Alert },
     setup() {
-      const checkedKeys = ref<Array<string | number>>([]);
+      const checkedKeys = ref<Array<string | number>>([])
       const [registerTable, { getForm }] = useTable({
         title: '开启搜索区域',
         api: demoListApi,
@@ -46,15 +46,15 @@
           selectedRowKeys: checkedKeys,
           onChange: onSelectChange,
         },
-      });
+      })
 
       function getFormValues() {
-        console.log(getForm().getFieldsValue());
+        console.log(getForm().getFieldsValue())
       }
 
       function onSelectChange(selectedRowKeys: (string | number)[]) {
-        console.log(selectedRowKeys);
-        checkedKeys.value = selectedRowKeys;
+        console.log(selectedRowKeys)
+        checkedKeys.value = selectedRowKeys
       }
 
       return {
@@ -62,7 +62,7 @@
         getFormValues,
         checkedKeys,
         onSelectChange,
-      };
+      }
     },
-  });
+  })
 </script>

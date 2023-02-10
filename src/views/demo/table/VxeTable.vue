@@ -13,17 +13,17 @@
   </PageWrapper>
 </template>
 <script lang="ts" setup>
-  import { reactive, ref } from 'vue';
-  import { TableAction, ActionItem } from '/@/components/Table';
-  import { PageWrapper } from '/@/components/Page';
-  import { useMessage } from '/@/hooks/web/useMessage';
-  import { vxeTableColumns, vxeTableFormSchema } from './tableData';
-  import { VxeBasicTable, BasicTableProps, VxeGridInstance } from '/@/components/VxeTable';
-  import { demoListApi } from '/@/api/demo/table';
+  import { reactive, ref } from 'vue'
+  import { TableAction, ActionItem } from '/@/components/Table'
+  import { PageWrapper } from '/@/components/Page'
+  import { useMessage } from '/@/hooks/web/useMessage'
+  import { vxeTableColumns, vxeTableFormSchema } from './tableData'
+  import { VxeBasicTable, BasicTableProps, VxeGridInstance } from '/@/components/VxeTable'
+  import { demoListApi } from '/@/api/demo/table'
 
-  const { createMessage } = useMessage();
+  const { createMessage } = useMessage()
 
-  const tableRef = ref<VxeGridInstance>();
+  const tableRef = ref<VxeGridInstance>()
 
   const gridOptions = reactive<BasicTableProps>({
     id: 'VxeTable',
@@ -40,7 +40,7 @@
             },
             events: {
               click: () => {
-                createMessage.success('点击了自定义按钮');
+                createMessage.success('点击了自定义按钮')
               },
             },
           },
@@ -59,15 +59,15 @@
             pageNum: page.currentPage,
             pageSize: page.pageSize,
             ...form,
-          });
+          })
         },
         queryAll: async ({ form }) => {
-          const data = await demoListApi(form);
-          return data;
+          const data = await demoListApi(form)
+          return data
         },
       },
     },
-  });
+  })
 
   // 操作按钮（权限控制）
   const createActions = (record) => {
@@ -75,7 +75,7 @@
       {
         label: '详情',
         onClick: () => {
-          console.log(record);
+          console.log(record)
         },
       },
       {
@@ -90,8 +90,8 @@
           confirm: () => {},
         },
       },
-    ];
+    ]
 
-    return actions;
-  };
+    return actions
+  }
 </script>

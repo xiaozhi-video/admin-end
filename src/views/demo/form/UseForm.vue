@@ -60,12 +60,12 @@
   </PageWrapper>
 </template>
 <script lang="ts">
-  import { defineComponent } from 'vue';
-  import { BasicForm, FormSchema, useForm } from '/@/components/Form/index';
-  import { CollapseContainer } from '/@/components/Container/index';
-  import { useMessage } from '/@/hooks/web/useMessage';
-  import { PageWrapper } from '/@/components/Page';
-  import { areaRecord } from '/@/api/demo/cascader';
+  import { defineComponent } from 'vue'
+  import { BasicForm, FormSchema, useForm } from '/@/components/Form/index'
+  import { CollapseContainer } from '/@/components/Container/index'
+  import { useMessage } from '/@/hooks/web/useMessage'
+  import { PageWrapper } from '/@/components/Page'
+  import { areaRecord } from '/@/api/demo/cascader'
 
   const schemas: FormSchema[] = [
     {
@@ -78,7 +78,7 @@
       componentProps: {
         placeholder: '自定义placeholder',
         onChange: (e: any) => {
-          console.log(e);
+          console.log(e)
         },
       },
     },
@@ -185,7 +185,7 @@
           parentCode: '',
         },
         isLeaf: (record) => {
-          return !(record.levelType < 3);
+          return !(record.levelType < 3)
         },
       },
     },
@@ -206,16 +206,16 @@
           parentCode: '',
         },
         isLeaf: (record) => {
-          return !(record.levelType < 3);
+          return !(record.levelType < 3)
         },
       },
     },
-  ];
+  ]
 
   export default defineComponent({
     components: { BasicForm, CollapseContainer, PageWrapper },
     setup() {
-      const { createMessage } = useMessage();
+      const { createMessage } = useMessage()
 
       const [register, { setProps, setFieldsValue, updateSchema }] = useForm({
         labelWidth: 120,
@@ -224,7 +224,7 @@
           span: 24,
         },
         fieldMapToTime: [['fieldTime', ['startTime', 'endTime'], 'YYYY-MM']],
-      });
+      })
 
       async function handleLoad() {
         const promiseFn = function () {
@@ -235,34 +235,34 @@
                 province: '湖南省',
                 city: '长沙市',
                 district: '岳麓区',
-              });
-            }, 1000);
-          });
-        };
+              })
+            }, 1000)
+          })
+        }
 
-        const item = await promiseFn();
+        const item = await promiseFn()
 
-        const { field9, province, city, district } = item as any;
+        const { field9, province, city, district } = item as any
         await updateSchema({
           field: 'field9',
           componentProps: {
             displayRenderArray: [province, city, district],
           },
-        });
+        })
         await setFieldsValue({
           field9,
-        });
+        })
       }
 
       return {
         register,
         schemas,
         handleSubmit: (values: Recordable) => {
-          createMessage.success('click search,values:' + JSON.stringify(values));
+          createMessage.success('click search,values:' + JSON.stringify(values))
         },
         setProps,
         handleLoad,
-      };
+      }
     },
-  });
+  })
 </script>

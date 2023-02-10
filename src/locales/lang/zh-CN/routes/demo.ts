@@ -191,4 +191,4 @@ export default {
     resizeParentHeightTable: '继承父元素高度',
     vxeTable: 'VxeTable',
   },
-};
+}
