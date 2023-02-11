@@ -1,8 +1,13 @@
-<script lang="ts" setup></script>
+<script lang="ts" setup>
 
-<template> $END$ </template>
-
-<script lang="ts">
-  export default { name: 'Index' }
 </script>
-<style lang="scss" scoped></style>
+
+<template>
+  index
+</template>
+
+<style lang="scss" scoped>
+</style>
+<script lang="ts">
+  export default { name: 'classify' }
+</script>
