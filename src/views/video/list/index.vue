@@ -3,11 +3,11 @@
 </script>
 
 <template>
-  index
+  <div>index</div>
 </template>
 
 <style lang="scss" scoped>
 </style>
 <script lang="ts">
-  export default { name: 'classify' }
+  export default { name: 'list' }
 </script>

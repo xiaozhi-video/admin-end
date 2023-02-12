@@ -1,7 +1,15 @@
 // 定义内容
 export default {
 	router: {
-		classifyIndex: '分类',
+		videoIndex: '视频',
+		videoList: '视频列表',
+		videoAudit: '审核',
+		videoClassify: '分类',
+		userIndex: '用户',
+		userList: '用户列表',
+		operationIndex: '运营',
+		operationHomeRecommend: '首页推荐',
+		operationHomeRotation: '首页轮播',
 		home: '首页',
 		system: '系统设置',
 		systemMenu: '菜单管理',
