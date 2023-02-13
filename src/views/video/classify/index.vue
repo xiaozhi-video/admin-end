@@ -41,7 +41,12 @@ const bindUpload = {
   name: 'file',
   accept: 'image/*',
   showFileList: false,
-  beforeUpload: (() => {
+  beforeUpload: ((file) => {
+    console.log(file)
+    if(!/image\/(x-icon|jpeg|png|svg|tiff)/.test(file.type)) {
+      ElMessage.error('文件类型不受支持')
+      return
+    }
     uploadLoading.value = true
   }) as UploadProps['beforeUpload'],
   onSuccess: ((res) => {
@@ -50,6 +55,11 @@ const bindUpload = {
     const from = list.value[0]!
     from.icon = res.path
   }) as UploadProps['onSuccess'],
+  onError: ((res) => {
+    ElMessage.error(res.message)
+    uploadLoading.value = false
+    console.log(res)
+  }) as UploadProps['onError']
 }
 
 const submit = async () => {
