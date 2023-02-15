@@ -40,7 +40,7 @@
 					@size-change="onHandleSizeChange"
 					@current-change="onHandleCurrentChange"
 					:page-sizes="[10, 20, 30]"
-					:current-page="state.tableData.param.pageNum"
+					:current-page="state.tableData.param.pageNumber"
 					:page-size="state.tableData.param.pageSize"
 					layout="total, sizes, prev, pager, next, jumper"
 					:total="state.tableData.total"
@@ -65,7 +65,7 @@ const state = reactive({
 		total: 99,
 		loading: false,
 		param: {
-			pageNum: 1,
+			pageNumber: 1,
 			pageSize: 10,
 		},
 	},

@@ -44,6 +44,7 @@ service.interceptors.response.use(
   },
   (error) => {
     const res = error.response
+
     // 对响应错误做点什么
     if(error.message.indexOf('timeout') != -1) {
       ElMessage.error('网络超时')
@@ -58,8 +59,9 @@ service.interceptors.response.use(
         .catch(() => {
         })
       return Promise.reject()
-    } else if(res.status === 400) {
-      ElMessage.error(res.data.detail || res.data.message)
+    } else if(res.status !== 200) {
+      const message = res.data.detail || res.data.message
+      if(message) ElMessage.error(message)
     }
     return error
   },

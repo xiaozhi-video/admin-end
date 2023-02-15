@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { addClassifyApi, ClassifyInfo, delClassifyApi, getClassifyListApi } from '/@/api/classify'
-import { Delete, Plus, Upload } from '@element-plus/icons-vue'
+import IconButton from '/@/components/iconButton/index.vue'
+import { Delete, Plus, Refresh, Upload, Close } from '@element-plus/icons-vue'
 import { ElMessage, UploadProps } from 'element-plus'
 import { onMounted, ref } from 'vue'
 
@@ -39,14 +40,13 @@ const uploadLoading = ref(false)
 const bindUpload = {
   action: "http://47.100.96.69:7001/upload/image",
   name: 'file',
-  accept: 'image/*',
+  accept: 'image/jpeg,png,svg,ico,tiff',
   showFileList: false,
   beforeUpload: ((file) => {
-    console.log(file)
-    if(!/image\/(x-icon|jpeg|png|svg|tiff)/.test(file.type)) {
-      ElMessage.error('文件类型不受支持')
-      return
-    }
+    // if(!/image\/(x-icon|jpeg|png|svg|tiff)/.test(file.type)) {
+    //   ElMessage.error('文件类型不受支持')
+    //   return
+    // }
     uploadLoading.value = true
   }) as UploadProps['beforeUpload'],
   onSuccess: ((res) => {
@@ -58,7 +58,6 @@ const bindUpload = {
   onError: ((res) => {
     ElMessage.error(res.message)
     uploadLoading.value = false
-    console.log(res)
   }) as UploadProps['onError']
 }
 
@@ -86,7 +85,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div>
+  <div class="p16">
     <el-table v-loading="loading" :data="list">
       <el-table-column label="名字">
         <template v-slot="{row}">
@@ -102,14 +101,14 @@ onMounted(() => {
         <template v-slot="{row}">
           <div v-if="row.ADD" class="cell">
             <el-upload v-loading="uploadLoading" class="avatar-uploader preview-image" v-bind="bindUpload">
-              <img v-if="previewImage" :src="previewImage" class="avatar"/>
+              <el-image v-if="previewImage" :src="previewImage" class="avatar"/>
               <el-icon v-else class="avatar-uploader-icon">
                 <Plus/>
               </el-icon>
             </el-upload>
           </div>
           <div v-else class="cell">
-            <el-image class="preview-image" :src="row.icon"></el-image>
+            <el-image class="preview-image" preview-teleported :src="row.icon" :preview-src-list="[row.icon]"></el-image>
           </div>
         </template>
       </el-table-column>
@@ -127,23 +126,23 @@ onMounted(() => {
         <template v-slot:header>
           <div class="cell">
             操作
-            <el-button :disabled="!!(list.length && 'ADD' in list[0])" :icon="Plus" circle class="add"
-                       size="default"
-                       type="primary" @click="add">
-            </el-button>
+            <div class="right">
+              <IconButton tooltip="添加" :icon="Plus" @click="add" :disabled="!!(list.length && 'ADD' in list[0])" type="primary" />
+              <IconButton tooltip="刷新" :icon="Refresh" @click="getList"/>
+            </div>
           </div>
         </template>
         <template v-slot="{row}">
           <div v-if="row.ADD" class="cell">
-            <el-button :icon="Upload" circle size="default" type="primary"
-                       @click="submit"></el-button>
-            <el-button :icon="Delete" circle size="default" type="danger"
-                       @click="shutDownAdd"></el-button>
+            <IconButton tooltip="提交" :icon="Upload" type="primary" @click="submit"></IconButton>
+            <IconButton tooltip="取消" :icon="Close" type="danger" @click="shutDownAdd"></IconButton>
           </div>
           <div v-else class="cell">
             <el-popconfirm title="确定删除该分类？" @confirm="delClassify(row.name)">
               <template v-slot:reference>
-                <el-button :icon="Delete" circle size="default" type="danger"></el-button>
+                <div>
+                  <IconButton tooltip="删除" :icon="Delete" type="danger"></IconButton>
+                </div>
               </template>
             </el-popconfirm>
           </div>
@@ -154,17 +153,13 @@ onMounted(() => {
 </template>
 
 <style lang="scss" scoped>
-.add {
-  float: right
+.right {
+  float: right;
+  margin-left: 6px;
 }
 
 :deep(.el-upload-list) {
   margin: 0;
-}
-
-.preview-image {
-  width: 64px;
-  height: 64px;
 }
 
 .avatar {

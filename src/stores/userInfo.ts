@@ -1,4 +1,4 @@
-import { getInfoApi } from '/@/api/user'
+import { getInfoApi } from '/@/api/admin'
 import { Session } from '/@/utils/storage'
 import { defineStore } from 'pinia'
 
@@ -43,6 +43,7 @@ export const useUserInfo = defineStore('userInfo', {
       if(status !== 200) {
         return null
       }
+      data.permissions.push('common')
       // 用户信息模拟数据
       return {
         photo: data.photo,

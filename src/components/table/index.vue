@@ -23,20 +23,28 @@
       >
         <template v-slot="scope">
           <template v-if="item.type === 'image'">
-            <img :height="item.height" :src="scope.row[item.key]" :width="item.width"/>
+            <img :height="item.height" :src="scope.row[item.key]" :width="item.width"
+                 class="preview-image"/>
           </template>
-          <template v-else>
+          <template v-if="item.type === 'text'">
             {{ scope.row[item.key] }}
           </template>
+          <slot :name="item.key" v-bind="scope"></slot>
         </template>
       </el-table-column>
-      <el-table-column v-if="config.isOperate" label="操作" width="100">
+      <el-table-column v-if="config.isOperate" :width="config.operateWidth" label="操作">
         <template v-slot="scope">
-          <el-popconfirm title="确定删除吗？" @confirm="onDelRow(scope.row)">
-            <template #reference>
-              <el-button text type="primary">删除</el-button>
-            </template>
-          </el-popconfirm>
+          <slot name="operate" v-bind="{...scope, flushed}">
+          </slot>
+        </template>
+        <template v-slot:header="scope">
+          <slot name="operateHeader" v-bind="{...scope, flushed}">
+            <div class="cell">
+              操作
+              <slot name="operateButton" v-bind="{...scope, flushed}">
+              </slot>
+            </div>
+          </slot>
         </template>
       </el-table-column>
       <template #empty>
@@ -45,9 +53,9 @@
     </el-table>
     <div class="table-footer mt15">
       <el-pagination
-          v-model:current-page="state.page.pageNum"
+          v-model:current-page="state.page.pageNumber"
           v-model:page-size="state.page.pageSize"
-          :page-sizes="[10, 20, 30]"
+          :page-sizes="[10, 20, 50]"
           :pager-count="5"
           :total="config.total"
           background
@@ -57,8 +65,9 @@
       >
       </el-pagination>
       <div class="table-footer-tool">
-        <SvgIcon :size="22" name="iconfont icon-yunxiazai_o" title="导出" @click="onImportTable"/>
-        <SvgIcon :size="22" name="iconfont icon-shuaxin" title="刷新" @click="onRefreshTable"/>
+        <slot name="footerButton"></slot>
+        <IconButton :icon="Download" text tooltip="导出" @click="onImportTable"/>
+        <IconButton :icon="Refresh" text tooltip="刷新" @click="onRefreshTable"/>
         <el-popover
             :persistent="false"
             :width="300"
@@ -69,20 +78,22 @@
             @show="onSetTable"
         >
           <template #reference>
-            <SvgIcon :size="22" name="iconfont icon-quanjushezhi_o" title="设置"/>
+            <div>
+              <IconButton :icon="Setting" text tooltip="设置"/>
+            </div>
           </template>
           <template #default>
             <div class="tool-box">
               <el-tooltip content="拖动进行排序" placement="top-start">
                 <SvgIcon :size="17" class="ml11" color="#909399" name="fa fa-question-circle-o"/>
               </el-tooltip>
-              <el-checkbox
-                  v-model="state.checkListAll"
-                  :indeterminate="state.checkListIndeterminate"
-                  class="ml10 mr1"
-                  label="列显示"
-                  @change="onCheckAllChange"
-              />
+              <!--              <el-checkbox-->
+              <!--                  v-model="state.checkListAll"-->
+              <!--                  :indeterminate="state.checkListIndeterminate"-->
+              <!--                  class="ml10 mr1"-->
+              <!--                  label="列显示"-->
+              <!--                  @change="onCheckAllChange"-->
+              <!--              />-->
               <el-checkbox v-model="getConfig.isSerialNo" class="ml12 mr1" label="序号"/>
               <el-checkbox v-model="getConfig.isSelection" class="ml12 mr1" label="多选"/>
             </div>
@@ -103,28 +114,38 @@
 </template>
 
 <script lang="ts" name="netxTable" setup>
+import IconButton from '/@/components/iconButton/index.vue'
 import { useThemeConfig } from '/@/stores/themeConfig'
 import '/@/theme/tableTool.scss'
+import { Download, Refresh, Setting } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
 import table2excel from 'js-table2excel'
 import { storeToRefs } from 'pinia'
 import Sortable from 'sortablejs'
-import { computed, nextTick, reactive, ref } from 'vue'
+import { computed, nextTick, onMounted, reactive, ref } from 'vue'
 
 // 定义父组件传过来的值
 
 const props = withDefaults(defineProps<{
   data: Array<EmptyObjectType>
   header: Array<EmptyObjectType>
-  config: {[x: string]: any}
+  config: { [x: string]: any }
 }>(), {
   data: () => [],
   header: () => [],
-  default: () => ({})
+  default: () => ({}),
 })
 
+interface PageParam {
+  pageSize: number,
+  pageNumber: number
+}
+
 // 定义子组件向父组件传值/事件
-const emit = defineEmits([ 'delRow', 'pageChange', 'sortHeader' ])
+const emit = defineEmits<{
+  (e: 'getDate', v: PageParam): void
+  (e: 'sortHeader', v: EmptyObjectType[]): void
+}>()
 
 // 定义变量内容
 const toolSetRef = ref()
@@ -132,13 +153,17 @@ const storesThemeConfig = useThemeConfig()
 const { themeConfig } = storeToRefs(storesThemeConfig)
 const state = reactive({
   page: {
-    pageNum: 1,
+    pageNumber: 1,
     pageSize: 10,
   },
   selectlist: [] as EmptyObjectType[],
   checkListAll: true,
   checkListIndeterminate: false,
 })
+
+const flushed = async () => {
+  emit('getDate', state.page)
+}
 
 // 设置边框显示/隐藏
 const setBorder = computed(() => {
@@ -153,11 +178,11 @@ const setHeader = computed(() => {
   return props.header.filter((v) => v.isCheck)
 })
 // tool 列显示全选改变时
-const onCheckAllChange = <T>(val: T) => {
-  if(val) props.header.forEach((v) => (v.isCheck = true))
-  else props.header.forEach((v) => (v.isCheck = false))
-  state.checkListIndeterminate = false
-}
+// const onCheckAllChange = <T>(val: T) => {
+//   if(val) props.header.forEach((v) => (v.isCheck = true))
+//   else props.header.forEach((v) => (v.isCheck = false))
+//   state.checkListIndeterminate = false
+// }
 // tool 列显示当前项改变时
 const onCheckChange = () => {
   const headers = props.header.filter((v) => v.isCheck).length
@@ -168,25 +193,21 @@ const onCheckChange = () => {
 const onSelectionChange = (val: EmptyObjectType[]) => {
   state.selectlist = val
 }
-// 删除当前项
-const onDelRow = (row: EmptyObjectType) => {
-  emit('delRow', row)
-}
 // 分页改变
 const onHandleSizeChange = (val: number) => {
   state.page.pageSize = val
-  emit('pageChange', state.page)
+  flushed()
 }
 // 分页改变
 const onHandleCurrentChange = (val: number) => {
-  state.page.pageNum = val
-  emit('pageChange', state.page)
+  state.page.pageNumber = val
+  flushed()
 }
 // 搜索时，分页还原成默认
 const pageReset = () => {
-  state.page.pageNum = 1
+  state.page.pageNumber = 1
   state.page.pageSize = 10
-  emit('pageChange', state.page)
+  flushed()
 }
 // 导出
 const onImportTable = () => {
@@ -195,7 +216,7 @@ const onImportTable = () => {
 }
 // 刷新
 const onRefreshTable = () => {
-  emit('pageChange', state.page)
+  flushed()
 }
 // 设置
 const onSetTable = () => {
@@ -216,6 +237,10 @@ const onSetTable = () => {
     })
   })
 }
+
+onMounted(() => {
+  flushed()
+})
 
 // 暴露变量
 defineExpose({
