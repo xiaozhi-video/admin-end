@@ -116,7 +116,7 @@ const state = reactive({
   ruleForm: {
     nickname: 'admin',
     password: 'xiaozhi01',
-    code: '1234',
+    code: '',
   },
   loading: {
     signIn: false,

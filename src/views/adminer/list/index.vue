@@ -70,7 +70,7 @@ const delAdmin = async ({ adminId, permissions }: AdminListInfo) => {
 
 const getPD = (value: string[]) => {
   if(value.includes('超级管理员')) return '超级管理员'
-  if(value.length <= 1) return '无管理权限'
+  if(value.length === 0) return '无管理权限'
   if(value.length <= 3) return value.join('、')
   return `${ value.slice(0, 3).join('、') } 等${ value.length - 1 }个权限`
 }
