@@ -52,7 +52,8 @@
       </el-col>
       <el-col :span="1"></el-col>
       <el-col :span="8">
-        <Captcha v-waves :identifyCode="identifyCode" class="login-content-code" @click="generateVerificationCode"></Captcha>
+        <Captcha v-waves :identifyCode="identifyCode" class="login-content-code"
+                 @click="generateVerificationCode"></Captcha>
       </el-col>
     </el-form-item>
     <el-form-item class="login-animation4">
@@ -114,8 +115,8 @@ const router = useRouter()
 const state = reactive({
   isShowPassword: false,
   ruleForm: {
-    nickname: 'admin',
-    password: 'xiaozhi01',
+    nickname: '',
+    password: '',
     code: '',
   },
   loading: {
@@ -137,10 +138,13 @@ const onSignIn = async () => {
   const { nickname, password } = state.ruleForm
   const { data, status } = await loginApi({ nickname, password })
   if(status !== 200) {
-    ElMessage.error({
-      message: '用户名或密码错误',
-    })
+    if(status === 405) {
+      ElMessage.error({
+        message: '用户名或密码错误',
+      })
+    }
     state.loading.signIn = false
+    return
   }
   // 存储 token 到浏览器缓存
   Session.set('token', data.authorization)

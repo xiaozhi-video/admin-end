@@ -2,15 +2,15 @@
 import { AdminListInfo, getListApi, removeAdminApi } from '/@/api/admin'
 import IconButton from '/@/components/iconButton/index.vue'
 import Table from '/@/components/table/index.vue'
+import { refEl } from '/@/utils'
 import AccountForm from '/@/views/adminer/components/AccountForm.vue'
 import { CirclePlus, Delete, Edit } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
 import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
-
 const router = useRouter()
 
-const TableEl = ref<InstanceType<typeof Table>>()
+const TableEl = refEl(Table)
 
 const tableOptions = reactive({
   data: [] as AdminListInfo[],
@@ -89,8 +89,9 @@ const showAddWin = ref(false)
 </script>
 
 <template>
-  <div class="p16">
-    <Table v-bind="tableOptions" @getDate="getList" @sortHeader="tableOptions.header = $event" ref="TableEl">
+  <div class="p8">
+    <Table ref="TableEl" v-bind="tableOptions" @getDate="getList"
+           @sortHeader="tableOptions.header = $event">
       <template v-slot:operate="{row}">
         <div class="cell">
           <IconButton :icon="Edit" tooltip="编辑" type="success" @click="edit(row)"/>

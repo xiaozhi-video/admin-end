@@ -13,7 +13,7 @@ export const useRoutesList = defineStore('routesList', {
 		isColumnsNavHover: false,
 	}),
 	actions: {
-		async setRoutesList(data: Array<string>) {
+		async setRoutesList(data: Array<any>) {
 			this.routesList = data;
 		},
 		async setColumnsMenuHover(bool: Boolean) {

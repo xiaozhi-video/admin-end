@@ -16,32 +16,36 @@
       <el-table-column
           v-for="(item, index) in setHeader"
           :key="index"
+          :formatter="item.formatter"
           :label="item.title"
           :prop="item.key"
+          :show-overflow-tooltip="true"
           :width="item.colWidth"
-          show-overflow-tooltip
       >
-        <template v-slot="scope">
+        <template v-if="$slots[item.key+ 'Header']" v-slot:header="scope">
+          <slot :name="item.key+ 'Header'" v-bind="scope"/>
+        </template>
+        <template v-if="item.type !== 'text'" v-slot="scope">
           <template v-if="item.type === 'image'">
-            <img :height="item.height" :src="scope.row[item.key]" :width="item.width"
-                 class="preview-image"/>
+            <el-image :preview-src-list="[toOriginal(scope.row[item.key])]" :src="scope.row[item.key]" class="preview-image"
+                      preview-teleported/>
           </template>
-          <template v-if="item.type === 'text'">
-            {{ scope.row[item.key] }}
+          <template v-if="item.type === 'date'">
+            {{ toDate(scope.row[item.key]) }}
           </template>
-          <slot :name="item.key" v-bind="scope"></slot>
+          <slot :name="item.key" v-bind="scope"/>
         </template>
       </el-table-column>
       <el-table-column v-if="config.isOperate" :width="config.operateWidth" label="操作">
         <template v-slot="scope">
-          <slot name="operate" v-bind="{...scope, flushed}">
+          <slot name="operate" v-bind="scope">
           </slot>
         </template>
         <template v-slot:header="scope">
-          <slot name="operateHeader" v-bind="{...scope, flushed}">
+          <slot name="operateHeader" v-bind="scope">
             <div class="cell">
               操作
-              <slot name="operateButton" v-bind="{...scope, flushed}">
+              <slot name="operateButton" v-bind="scope">
               </slot>
             </div>
           </slot>
@@ -117,6 +121,7 @@
 import IconButton from '/@/components/iconButton/index.vue'
 import { useThemeConfig } from '/@/stores/themeConfig'
 import '/@/theme/tableTool.scss'
+import { toOriginal } from '/@/utils/image'
 import { Download, Refresh, Setting } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
 import table2excel from 'js-table2excel'
@@ -135,6 +140,10 @@ const props = withDefaults(defineProps<{
   header: () => [],
   default: () => ({}),
 })
+
+function toDate(v: string | number | Date) {
+  return (new Date(v)).toLocaleString()
+}
 
 interface PageParam {
   pageSize: number,
@@ -167,7 +176,7 @@ const flushed = async () => {
 
 // 设置边框显示/隐藏
 const setBorder = computed(() => {
-  return props.config.isBorder ? true : false
+  return !!props.config.isBorder
 })
 // 获取父组件 配置项（必传）
 const getConfig = computed(() => {
@@ -245,6 +254,7 @@ onMounted(() => {
 // 暴露变量
 defineExpose({
   pageReset,
+  flushed,
 })
 </script>
 
