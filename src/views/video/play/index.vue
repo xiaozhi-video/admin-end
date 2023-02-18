@@ -2,7 +2,7 @@
 
 import { getFromId, VideoInfo } from '/@/api/video'
 import VideoPaly from '/@/components/videoPlay/index.vue'
-import { onMounted, reactive } from 'vue'
+import { onMounted, reactive, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
 const route = useRoute()
@@ -11,10 +11,15 @@ const form: Partial<VideoInfo> = reactive({
 })
 
 const getForm = async () => {
-  const videoId = route.query.adminId as string
+  const videoId = route.query.videoId as string
+  if(!videoId) return
   const { data } = await getFromId({ videoId })
   Object.assign(form, data.data)
 }
+
+// watch(() => route.query.videoId, async () => {
+//   getForm()
+// })
 
 onMounted(() => {
   getForm()

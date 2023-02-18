@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { ClassifyInfo, getClassifyListApi } from '/@/api/classify'
-import { getVideoApi, unpushApi, VideoInfo } from '/@/api/video'
+import { auditApi, getVideoApi, VideoInfo } from '/@/api/video'
 import IconButton from '/@/components/iconButton/index.vue'
 import Table from '/@/components/table/index.vue'
 import { refEl } from '/@/utils'
@@ -46,7 +46,7 @@ const tableOptions = reactive({
       title: '分类',
       isCheck: true,
       type: 'text',
-      colWidth: '260px',
+      colWidth: '210px',
     },
     {
       key: 'createdAt',
@@ -96,10 +96,11 @@ const getClassify = async () => {
   classifyList.value = data.data
 }
 
-const unpush = async (row: VideoInfo) => {
-  const { status } = await unpushApi({ videoId: row.videoId })
+const audit = async (row: VideoInfo) => {
+  const { status } = await auditApi({ videoId: row.videoId })
   if(status === 200) {
-    ElMessage.success('已下架')
+    ElMessage.success('已通过审核')
+    await tableEl.value!.flushed()
   }
 }
 
@@ -125,8 +126,8 @@ onMounted(() => {
       <!--  操作    -->
       <template v-slot:operate="{row}">
         <div class="cell">
-          <IconButton :icon="Upload" tooltip="立即发布"
-                      @click="unpush(row)"/>
+          <IconButton :icon="Upload" tooltip="通过审核"
+                      @click="audit(row)"/>
           <IconButton :icon="VideoCameraFilled" tooltip="前往播放"
                       @click="toPlay(row.videoId)"/>
         </div>
@@ -140,9 +141,8 @@ onMounted(() => {
       <!--   分类过滤   -->
       <template #classifyHeader>
         <div class="filter-box">
-          <div class="filter-title">分类</div>
           <el-select v-model="query.classify" class="filter-select" clearable filterable
-                     @change="tableEl.flushed()">
+                     @change="tableEl.flushed()" placeholder="选择分类">
             <el-option v-for="item in classifyList" :key="item.name" :label="item.name"
                        :value="item.name">
             </el-option>

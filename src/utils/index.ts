@@ -4,8 +4,3 @@ export const refEl = <T extends abstract new (...args: any) => any>(a?: T) => {
   a
   return ref<InstanceType<T>>()
 }
-
-export const refEls = <T extends abstract new (...args: any) => any>(a?: T) => {
-  a
-  return ref<InstanceType<T>[]>()
-}

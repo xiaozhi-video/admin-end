@@ -23,7 +23,7 @@ defineEmits<{
       placement="top-start"
   >
     <el-button :disabled="disabled" :icon="icon" :text="text" :type="type" circle
-               class="icon-button" size="default" @click="$emit('click', $event)"></el-button>
+               class="icon-button" @click="$emit('click', $event)"></el-button>
   </el-tooltip>
 </template>
 

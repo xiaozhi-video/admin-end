@@ -20,6 +20,10 @@ export interface VideoInfo {
   state: number
   createdAt: string
   user: UserInfo
+  recommend: number
+  readCount: number
+  likeCount: number
+  sortValue: number
 }
 
 export const getVideoApi = (data: VideoParams) =>
@@ -31,11 +35,32 @@ export const getVideoApi = (data: VideoParams) =>
 export const unpushApi = (data: { videoId: string }) =>
   request<Pages<VideoInfo>>({
     url: 'video/unpush',
+    method: 'PUT',
+    data,
+  })
+
+export const auditApi = (data: { videoId: string }) =>
+  request<Pages<VideoInfo>>({
+    url: 'video/audit',
+    method: 'PUT',
     data,
   })
 
 export const getFromId = (data: { videoId: string }) =>
-  request<{data: VideoInfo}>({
+  request<{ data: VideoInfo }>({
     url: '/admin/video/fromId',
-    data
+    data,
+  })
+
+export const getRanking = (data: { sortValue: number }) =>
+  request<{ data: number }>({
+    url: '/video/ranking',
+    data,
+  })
+
+export const putRecommend = (data: { videoId: string, recommend: number }) =>
+  request<{ data: number }>({
+    url: '/video/recommend',
+    method: 'PUT',
+    data,
   })

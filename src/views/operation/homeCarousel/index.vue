@@ -15,6 +15,8 @@ function randomString(e = 32) {
   return n
 }
 
+const maxNumber = ref(9)
+
 const getList = async () => {
   loading.value = true
   const { data } = await getCarouselApi()
@@ -40,7 +42,7 @@ function toView(index: number) {
 }
 
 const submit = async () => {
-  await form.value!.validate()
+  if(!await formEl.value!.validate()) return
   loading.value = true
   const carousel = list.value.map(
       ({
@@ -62,9 +64,13 @@ const submit = async () => {
   }
 }
 
-const form = refEl()
+const formEl = refEl()
 
 function add() {
+  if(list.value.length >= maxNumber.value) {
+    ElMessage.warning('达到最大数量')
+    return
+  }
   list.value.unshift({ url: '', image: '', imagePreview: '', id: randomString() })
   toView(0)
 }
@@ -76,26 +82,26 @@ function add() {
     <el-affix>
       <el-descriptions :column="3" class="mb6">
         <el-descriptions-item label="当前数量">{{ list.length }}</el-descriptions-item>
-        <el-descriptions-item label="最大数量">{{ 9 }}</el-descriptions-item>
+        <el-descriptions-item label="最大数量">{{ maxNumber }}</el-descriptions-item>
         <el-descriptions-item>
-          <el-button :icon="Menu" size="default" type="primary" @click="showSlider = true">
+          <el-button :icon="Menu" type="primary" @click="showSlider = true">
             打开缩略图
           </el-button>
-          <el-button :icon="UploadFilled" size="default" type="primary" @click="submit">
+          <el-button :icon="UploadFilled" type="primary" @click="submit">
             提交
           </el-button>
-          <el-button :icon="Plus" size="default" type="primary" @click="add">
+          <el-button :icon="Plus" type="primary" @click="add">
             添加
           </el-button>
-          <el-button :icon="Refresh" size="default" type="primary" @click="getList">
+          <el-button :icon="Refresh" type="primary" @click="getList">
             刷新
           </el-button>
         </el-descriptions-item>
       </el-descriptions>
     </el-affix>
-    <Carousel id="selector" ref="form" v-model="list" v-loading="loading" @to-view="toView"/>
-    <el-drawer v-model="showSlider" :lock-scroll="false" :modal="false" class="slider" size="160px">
-      <Thumbnail :list="list" @add="add" @to-view="toView"/>
+    <Carousel id="selector" ref="formEl" v-model="list" v-loading="loading" @to-view="toView"/>
+    <el-drawer v-model="showSlider" :lock-scroll="false" :modal="true" class="slider" size="160px">
+      <Thumbnail v-model="list" @to-view="toView"/>
     </el-drawer>
   </div>
 </template>

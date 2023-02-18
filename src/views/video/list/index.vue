@@ -45,7 +45,7 @@ const tableOptions = reactive({
       title: '分类',
       isCheck: true,
       type: 'text',
-      colWidth: '260px',
+      colWidth: '210px',
     },
     {
       key: 'state',
@@ -163,9 +163,8 @@ onMounted(() => {
       <!--   分类过滤   -->
       <template #classifyHeader>
         <div class="filter-box">
-          <div class="filter-title">分类</div>
           <el-select v-model="query.classify" class="filter-select" clearable filterable
-                     @change="tableEl.flushed()">
+                     @change="tableEl.flushed()" placeholder="选择分类">
             <el-option v-for="item in classifyList" :key="item.name" :label="item.name"
                        :value="item.name">
             </el-option>

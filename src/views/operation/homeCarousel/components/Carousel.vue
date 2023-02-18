@@ -1,8 +1,7 @@
 <script lang="ts" setup>
 import { CarouselInfo } from '/@/api/carousel'
-import { refEls } from '/@/utils'
 import CarouselItem from '/@/views/operation/homeCarousel/components/CarouselItem.vue'
-import NewComponent from '/@/views/operation/homeCarousel/components/NewComponent.vue'
+import { ref } from 'vue'
 
 const props = defineProps<{
   modelValue: CarouselInfo[]
@@ -19,23 +18,6 @@ function update(item: CarouselInfo, update: Partial<CarouselInfo>) {
   })
   emit('update:modelValue', list)
 }
-
-const items = refEls()
-
-defineExpose({
-  async validate() {
-    const ts = items.value!
-    for(let i = 0; i < ts.length; i++) {
-      const e = ts[i]
-      try {
-        await e.validate()
-      } catch(e) {
-        emit('toView', i)
-        return
-      }
-    }
-  },
-})
 
 function up(index: number) {
   const nr = Array.from(props.modelValue)
@@ -57,23 +39,47 @@ function del(item: CarouselInfo) {
   emit('update:modelValue', props.modelValue.filter(e => e !== item))
 }
 
+let items = [] as any[]
+
+function getRef(el: any) {
+  if(el) items.push(el)
+}
+
+const validates = ref<Function[]>([])
+
+const map = new Map<string, Function>()
+
+defineExpose({
+  async validate() {
+    for(let i = 0; i < validates.value.length; i++) {
+      const e = validates.value[i]
+      try {
+        await e()
+      } catch(err) {
+        emit('toView', i)
+        return false
+      }
+    }
+    return true
+  },
+})
+
 </script>
 
 <template>
-  <el-button @click="del(modelValue[0])">删除</el-button>
   <transition-group class="box" name="fade" tag="div">
-        <CarouselItem v-for="item in modelValue" :key="item.id" :model-value="item"/>
-<!--    <CarouselItem v-for="(item, index) in modelValue" :key="item.id"-->
-<!--                  ref="items"-->
-<!--                  :index="index"-->
-<!--                  :length="modelValue.length"-->
-<!--                  :modelValue="item"-->
-<!--                  @del="del(item)"-->
-<!--                  @down="down"-->
-<!--                  @up="up"-->
-<!--                  @update:modelValue="update(item, $event)"-->
-<!--    />-->
-
+    <CarouselItem v-for="(item, index) in modelValue" :key="item.id"
+                  :ref="getRef"
+                  :index="index"
+                  :length="modelValue.length"
+                  :modelValue="item"
+                  @del="del(item)"
+                  @down="down"
+                  @up="up"
+                  @mounted="map.set($event.id, $event.validate)"
+                  @update:modelValue="update(item, $event)"
+                  v-model:validate="validates[index]"
+    />
   </transition-group>
 </template>
 <script lang="ts">
@@ -91,7 +97,7 @@ export default { name: 'Carousel' }
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;
-  transform: translateX(30px);
+  transform: translate(30px);
 }
 
 /* 3. 确保离开的项目被移除出了布局流

@@ -1,29 +1,45 @@
 <script lang="ts" setup>
 import { CarouselInfo } from '/@/api/carousel'
-import { Plus } from '@element-plus/icons-vue'
+import { refEl } from '/@/utils'
+import Sortable from 'sortablejs'
+import { onMounted } from 'vue'
 
-defineProps<{
-  list: CarouselInfo[]
+const props = defineProps<{
+  modelValue: CarouselInfo[]
 }>()
-defineEmits<{
-  (e: 'add', v: void): void
+const emit = defineEmits<{
   (e: 'toView', v: number): void
+  (e: 'update:modelValue', v: CarouselInfo[]): void
 }>()
+
+const box = refEl(HTMLDivElement)
+
+onMounted(() => {
+  const sortable = Sortable.create(box.value!, {
+    handle: '.handle',
+    dataIdAttr: 'data-key',
+    animation: 150,
+    onEnd: () => {
+      const list: any[] = []
+      sortable.toArray().forEach((val) => {
+        props.modelValue.forEach((v) => {
+          if(v.id === val) list.push({ ...v })
+        })
+      })
+      emit('update:modelValue', list)
+    },
+  })
+})
 </script>
 
 <template>
   <el-scrollbar class="p8">
-    <div class="b16-9 mb6">
-      <div class="add-item" @click="$emit('add')">
-        <el-icon>
-          <Plus/>
-        </el-icon>
-      </div>
-    </div>
-    <div v-for="(item, index) in list" :key="index" class="thumbnail b16-9"
-         @click="$emit('toView', index)">
-      <div class="wr">
-        <img :src="item.imagePreview" class="tile"/>
+    <div ref="box" class="box">
+      <div v-for="(item, index) in modelValue" :key="item.id" :data-key="item.id" class="thumbnail b16-9 handle"
+           @click="$emit('toView', index)">
+        <div class="wr">
+          <img :src="item.imagePreview" class="tile"/>
+        </div>
       </div>
     </div>
   </el-scrollbar>
@@ -41,21 +57,6 @@ export default {
   border: 1px dashed var(--el-border-color);
   border-radius: 6px;
   margin-bottom: 6px;
-}
-
-.add-item {
-  cursor: pointer;
-  border: 1px dashed var(--el-border-color);
-  border-radius: 6px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: var(--next-bg-topBar);
-  transition: var(--el-transition-duration-fast);
-
-  &:hover {
-    border-color: var(--el-color-primary);
-  }
 }
 
 .wr {

@@ -12,10 +12,11 @@
     >
       <el-table-column v-if="config.isSelection" :reserve-selection="true" type="selection"
                        width="30"/>
-      <el-table-column v-if="config.isSerialNo" label="序号" type="index" width="60"/>
+      <el-table-column v-if="config.isSerialNo" :index="getIndex" label="序号" type="index"
+                       width="60"/>
       <el-table-column
-          v-for="(item, index) in setHeader"
-          :key="index"
+          v-for="(item) in setHeader"
+          :key="item.key"
           :formatter="item.formatter"
           :label="item.title"
           :prop="item.key"
@@ -27,7 +28,8 @@
         </template>
         <template v-if="item.type !== 'text'" v-slot="scope">
           <template v-if="item.type === 'image'">
-            <el-image :preview-src-list="[toOriginal(scope.row[item.key])]" :src="scope.row[item.key]" class="preview-image"
+            <el-image :preview-src-list="[toOriginal(scope.row[item.key])]"
+                      :src="scope.row[item.key]" class="preview-image"
                       preview-teleported/>
           </template>
           <template v-if="item.type === 'date'">
@@ -38,16 +40,14 @@
       </el-table-column>
       <el-table-column v-if="config.isOperate" :width="config.operateWidth" label="操作">
         <template v-slot="scope">
-          <slot name="operate" v-bind="scope">
+          <slot name="operate" v-bind="{...scope, page: state.page}">
           </slot>
         </template>
         <template v-slot:header="scope">
           <slot name="operateHeader" v-bind="scope">
-            <div class="cell">
-              操作
-              <slot name="operateButton" v-bind="scope">
-              </slot>
-            </div>
+            操作
+            <slot name="operateButton" v-bind="{...scope, page: state.page}">
+            </slot>
           </slot>
         </template>
       </el-table-column>
@@ -140,6 +140,8 @@ const props = withDefaults(defineProps<{
   header: () => [],
   default: () => ({}),
 })
+
+const getIndex = (index: number) => (state.page.pageNumber - 1) * state.page.pageSize + index + 1
 
 function toDate(v: string | number | Date) {
   return (new Date(v)).toLocaleString()
