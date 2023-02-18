@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { ClassifyInfo, getClassifyListApi } from '/@/api/classify'
+import { PageParams } from '/@/api/user'
 import { auditApi, getVideoApi, VideoInfo } from '/@/api/video'
 import IconButton from '/@/components/iconButton/index.vue'
 import Table from '/@/components/table/index.vue'
@@ -83,7 +84,7 @@ const query = reactive({
   state: 1,
 })
 
-const getList = async (page: {}) => {
+const getList = async (page: PageParams) => {
   tableOptions.config.loading = true
   const { data } = await getVideoApi({ ...page, ...query })
   tableOptions.data = data.data

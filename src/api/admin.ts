@@ -1,4 +1,5 @@
 import { Pages } from '/@/api/types'
+import { PageParams } from '/@/api/user'
 import request from '/@/utils/request'
 
 export const loginApi = (data: { nickname: string; password: string }) =>
@@ -34,7 +35,7 @@ export interface AdminListInfo {
   permissionsDescription: string[]
 }
 
-export const getListApi = (data: { keyWord?: string; permission?: string }) =>
+export const getListApi = (data: { keyWord?: string; permission?: string, } & PageParams) =>
   request<Pages<AdminListInfo>>({
     url: '/admin/list',
     data,

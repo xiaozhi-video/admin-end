@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { ClassifyInfo, getClassifyListApi } from '/@/api/classify'
+import { PageParams } from '/@/api/user'
 import { getRanking, getVideoApi, putRecommend, VideoInfo } from '/@/api/video'
 import IconButton from '/@/components/iconButton/index.vue'
 import Table from '/@/components/table/index.vue'
@@ -57,7 +58,7 @@ const tableOptions = reactive({
     },
     {
       key: 'recommend',
-      title: '推荐指数',
+      title: '推荐权重',
       isCheck: true,
     },
     {
@@ -109,7 +110,7 @@ const query = reactive({
   state: 2,
 })
 
-const getList = async (page: {}) => {
+const getList = async (page: PageParams) => {
   tableOptions.config.loading = true
   const { data } = await getVideoApi({ ...page, ...query })
   tableOptions.data = data.data

@@ -74,10 +74,10 @@ onMounted(() => {
 
 <template>
   <div class="p8">
-    <el-descriptions title="管理员信息">
+    <el-descriptions title="管理员信息" :column="3">
       <el-descriptions-item class="p8" label="用户名:">{{ form.nickname }}</el-descriptions-item>
-      <el-descriptions-item class="p8" label="头像:"><img :src="form.photo" class="preview-image">
-      </el-descriptions-item>
+      <el-descriptions-item class="p8" label="头像:"><img :src="form.photo" class="preview-image"></el-descriptions-item>
+      <el-descriptions-item class="p8" label="头像:"></el-descriptions-item>
     </el-descriptions>
     <el-table ref="tableEl" :data="permissions" @click="superAdmin"
               @selectionChange="selectionChange">

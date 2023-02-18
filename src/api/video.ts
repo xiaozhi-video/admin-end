@@ -1,13 +1,11 @@
 import { Pages } from '/@/api/types'
-import { UserInfo } from '/@/api/user'
+import { PageParams, UserInfo } from '/@/api/user'
 import request from '/@/utils/request'
 
-export interface VideoParams {
+export interface VideoParams extends PageParams {
   keyWord?: string
   state?: number
   userId?: number
-  pageNumber?: number
-  pageSize?: number
 }
 
 export interface VideoInfo {
