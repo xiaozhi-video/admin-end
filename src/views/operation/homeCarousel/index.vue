@@ -1,19 +1,11 @@
 <script lang="ts" setup>
 import { CarouselInfo, getCarouselApi, putCarouselApi } from '/@/api/carousel'
-import { refEl } from '/@/utils'
+import { randomString, refEl } from '/@/utils'
 import Carousel from '/@/views/operation/homeCarousel/components/Carousel.vue'
 import Thumbnail from '/@/views/operation/homeCarousel/components/Thumbnail.vue'
 import { Menu, Plus, Refresh, UploadFilled } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
 import { onMounted, ref } from 'vue'
-
-function randomString(e = 32) {
-  const t = "ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678",
-      l = t.length
-  let n = ""
-  for(let i = 0; i < e; i++) n += t.charAt(Math.floor(Math.random() * l))
-  return n
-}
 
 const maxNumber = ref(9)
 

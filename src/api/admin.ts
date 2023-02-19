@@ -48,8 +48,15 @@ export const removeAdminApi = (data: { adminId: number }) =>
     data,
   })
 
-export const getFromIdApi = (data: { adminId: string }) =>
+export const getFromIdApi = (data: { adminId: number }) =>
   request({
     url: '/admin/fromId',
     data,
+  })
+
+export const resetPassApi = (data: { adminId: number }) =>
+  request({
+    url: '/admin/resetPassword',
+    method: 'POST',
+    data
   })

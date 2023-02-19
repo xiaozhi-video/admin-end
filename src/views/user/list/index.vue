@@ -38,7 +38,7 @@ const tableOptions = reactive({
       key: 'banned',
       title: '状态',
       isCheck: true,
-      colWidth: '210px',
+      colWidth: '160px',
     },
     {
       key: 'createdAt',
@@ -115,11 +115,6 @@ function bannedChange(val: number | '') {
           </el-popconfirm>
         </div>
       </template>
-      <!--   状态   -->
-      <template v-slot:banned="{row}">
-        <el-tag v-if="row.banned === 0" type="info">正常</el-tag>
-        <el-tag v-else-if="row.banned === 1" type="danger">已封禁</el-tag>
-      </template>
       <!--   搜索   -->
       <template #nicknameHeader>
         <el-input v-model="query.keyWord" placeholder="搜索" @keyup.enter="tableEl.flushed()">
@@ -129,13 +124,17 @@ function bannedChange(val: number | '') {
       <!--   状态过滤   -->
       <template #bannedHeader>
         <div class="filter-box">
-          <div class="filter-title">状态</div>
           <el-select v-model="query.banned" class="filter-select" clearable filterable
-                     @change="bannedChange">
+                     @change="bannedChange" placeholder="选择状态">
             <el-option :value="0" label="未封禁"></el-option>
             <el-option :value="1" label="已封禁"></el-option>
           </el-select>
         </div>
+      </template>
+      <!--   状态   -->
+      <template v-slot:banned="{row}">
+        <el-tag v-if="row.banned === 0" type="info">正常</el-tag>
+        <el-tag v-else-if="row.banned === 1" type="danger">已封禁</el-tag>
       </template>
     </Table>
   </div>

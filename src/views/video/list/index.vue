@@ -175,9 +175,8 @@ onMounted(() => {
       <!--   状态过滤   -->
       <template #stateHeader>
         <div class="filter-box">
-          <div class="filter-title">状态</div>
           <el-select v-model="query.state" class="filter-select" clearable filterable
-                     @change="stateChange">
+                     @change="stateChange" placeholder="选择状态">
             <el-option v-for="item in stateList" :key="item.value" :label="item.label"
                        :value="item.value">
             </el-option>

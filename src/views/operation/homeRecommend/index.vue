@@ -48,7 +48,7 @@ const tableOptions = reactive({
       title: '分类',
       isCheck: true,
       type: 'text',
-      colWidth: '210px',
+      colWidth: '200px',
     },
     {
       key: 'createdAt',
@@ -205,7 +205,7 @@ onMounted(() => {
         <div class="cell">
           <IconButton :icon="Sort" tooltip="编辑" @click="edit(prop)"/>
           <IconButton :icon="VideoCameraFilled" tooltip="前往播放"
-                      @click="toPlay(row.videoId)"/>
+                      @click="toPlay(prop.row.videoId)"/>
         </div>
       </template>
       <!--   搜索   -->
