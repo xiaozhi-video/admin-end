@@ -54,13 +54,20 @@ function success({ url, path }: ImageInfo) {
 }
 
 function changeHandoff() {
-  if (handoff.value) {
-    const url = props.modelValue.videoId
-    update({ url, videoId: '' })
-  } else {
-    const videoId = props.modelValue.url
-    update({ url: '', videoId })
-  }
+  errorMessage('由于微信的限制，外链功能关闭')
+  handoff.value = 0
+  return
+  // if (handoff.value) {
+  //   const url = props.modelValue.videoId
+  //   update({ url, videoId: '' })
+  // } else {
+  //   const videoId = props.modelValue.url
+  //   update({ url: '', videoId })
+  // }
+}
+
+function errorMessage(title: string) {
+  ElMessage.error(title)
 }
 
 const appCoverloading = ref(false)
@@ -113,7 +120,7 @@ onMounted(() => {
       <div class="right">
         <el-form-item :prop="handoff ? 'url': 'videoId'" label="URL">
           <template #label>
-            <el-radio-group v-model="handoff" @change="changeHandoff">
+            <el-radio-group v-model="handoff" aria-readonly="true" @change="changeHandoff">
               <el-radio-button :label="0">视频</el-radio-button>
               <el-radio-button :label="1">外链</el-radio-button>
             </el-radio-group>
