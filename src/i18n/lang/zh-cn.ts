@@ -15,6 +15,7 @@ export default {
 		adminerList: '列表',
 		adminerEdit: '编辑',
 		home: '首页',
+		myInfo: '个人信息'
 	},
 	staticRoutes: {
 		signIn: '登录',

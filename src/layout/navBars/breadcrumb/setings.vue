@@ -430,18 +430,18 @@
 </template>
 
 <script setup lang="ts" name="layoutBreadcrumbSeting">
-import { nextTick, onUnmounted, onMounted, computed, reactive } from 'vue';
-import { ElMessage } from 'element-plus';
-import { useI18n } from 'vue-i18n';
-import { storeToRefs } from 'pinia';
-import { useThemeConfig } from '/@/stores/themeConfig';
-import { useChangeColor } from '/@/utils/theme';
-import { verifyAndSpace } from '/@/utils/toolsValidate';
-import { Local } from '/@/utils/storage';
-import Watermark from '/@/utils/wartermark';
-import commonFunction from '/@/utils/commonFunction';
-import other from '/@/utils/other';
-import mittBus from '/@/utils/mitt';
+import { useThemeConfig } from '/@/stores/themeConfig'
+import commonFunction from '/@/utils/commonFunction'
+import mittBus from '/@/utils/mitt'
+import other from '/@/utils/other'
+import { Local } from '/@/utils/storage'
+import { useChangeColor } from '/@/utils/theme'
+import { verifyAndSpace } from '/@/utils/toolsValidate'
+import Watermark from '/@/utils/wartermark'
+import { ElMessage } from 'element-plus'
+import { storeToRefs } from 'pinia'
+import { computed, nextTick, onMounted, onUnmounted, reactive } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 // 定义变量内容
 const { locale } = useI18n();

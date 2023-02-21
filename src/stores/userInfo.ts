@@ -18,34 +18,21 @@ export const useUserInfo = defineStore('userInfo', {
   }),
   actions: {
     async setUserInfos() {
-      const info = await this.getApiUserInfo()
-      if(!info) {
-        // @ts-ignore
-        // this.userInfos = {}
-        // const router = useRouter()
-        // console.log(router)
-        // router.replace({
-        //   name: 'login',
-        // })
-        const { userInfos } = this
-        userInfos.nickname = ''
-        userInfos.photo = ''
-        userInfos.time = 0
-        userInfos.roles = []
-        userInfos.authBtnList = []
-        Session.remove('token')
-        return
-      }
-      this.userInfos = info
-    },
-    async getApiUserInfo() {
       const { data, status } = await getInfoApi()
       if(status !== 200) {
-        return null
+        if(status === 401) {
+          const { userInfos } = this
+          userInfos.nickname = ''
+          userInfos.photo = ''
+          userInfos.time = 0
+          userInfos.roles = []
+          userInfos.authBtnList = []
+          Session.remove('token')
+        }
+        return
       }
       data.permissions.push('common')
-      // 用户信息模拟数据
-      return {
+      const info = {
         photo: data.photo,
         nickname: data.nickname,
         adminId: data.adminId,
@@ -53,6 +40,7 @@ export const useUserInfo = defineStore('userInfo', {
         roles: data.permissions,
         authBtnList: data.authButton,
       }
+      this.userInfos = info
     },
   },
 })

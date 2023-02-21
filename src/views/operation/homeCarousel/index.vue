@@ -33,19 +33,19 @@ function toView(index: number) {
   showSlider.value = false
 }
 
+const submitMap = ({ image, url, id, videoId }: CarouselInfo) => {
+  const p = { image, url, id, videoId }
+  if(videoId) {
+    delete p.url
+  }
+  return p
+}
+
 const submit = async () => {
   if(!await formEl.value!.validate()) return
   loading.value = true
-  const carousel = list.value.map(
-      ({
-         image,
-         url,
-         id,
-       }) => ({
-        image,
-        url,
-        id,
-      }))
+  const carousel =
+      list.value.map(submitMap)
   const { status } = await putCarouselApi({
     carousel,
   })

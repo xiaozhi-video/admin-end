@@ -45,13 +45,13 @@
 </template>
 
 <script setup lang="ts" name="layoutColumnsAside">
-import { reactive, ref, onMounted, nextTick, watch, onUnmounted } from 'vue';
-import { useRoute, useRouter, onBeforeRouteUpdate, RouteRecordRaw } from 'vue-router';
-import { storeToRefs } from 'pinia';
-import pinia from '/@/stores/index';
-import { useRoutesList } from '/@/stores/routesList';
-import { useThemeConfig } from '/@/stores/themeConfig';
-import mittBus from '/@/utils/mitt';
+import pinia from '/@/stores/index'
+import { useRoutesList } from '/@/stores/routesList'
+import { useThemeConfig } from '/@/stores/themeConfig'
+import mittBus from '/@/utils/mitt'
+import { storeToRefs } from 'pinia'
+import { nextTick, onMounted, onUnmounted, reactive, ref, watch } from 'vue'
+import { onBeforeRouteUpdate, RouteRecordRaw, useRoute, useRouter } from 'vue-router'
 
 // 定义变量内容
 const columnsAsideOffsetTopRefs = ref<RefType>([]);

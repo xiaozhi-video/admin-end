@@ -14,9 +14,9 @@
 </template>
 
 <script setup lang="ts" name="layoutLinkView">
-import { reactive, watch } from 'vue';
-import { useRoute } from 'vue-router';
-import { verifyUrl } from '/@/utils/toolsValidate';
+import { verifyUrl } from '/@/utils/toolsValidate'
+import { reactive, watch } from 'vue'
+import { useRoute } from 'vue-router'
 
 // 定义变量内容
 const route = useRoute();

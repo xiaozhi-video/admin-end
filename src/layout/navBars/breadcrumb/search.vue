@@ -28,11 +28,11 @@
 </template>
 
 <script setup lang="ts" name="layoutBreadcrumbSearch">
-import { reactive, ref, nextTick } from 'vue';
-import { useRouter } from 'vue-router';
-import { useI18n } from 'vue-i18n';
-import { storeToRefs } from 'pinia';
-import { useTagsViewRoutes } from '/@/stores/tagsViewRoutes';
+import { useTagsViewRoutes } from '/@/stores/tagsViewRoutes'
+import { storeToRefs } from 'pinia'
+import { nextTick, reactive, ref } from 'vue'
+import { useI18n } from 'vue-i18n'
+import { useRouter } from 'vue-router'
 
 // 定义变量内容
 const storesTagsViewRoutes = useTagsViewRoutes();

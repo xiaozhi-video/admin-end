@@ -1,16 +1,20 @@
 <script lang="ts" setup>
 import { AdminListInfo, getListApi, removeAdminApi } from '/@/api/admin'
+import { getClassifyListApi } from '/@/api/classify'
+import { getPermissionsApi, PermissionInfo } from '/@/api/permission'
+import { PageParams } from '/@/api/user'
 import IconButton from '/@/components/iconButton/index.vue'
 import Table from '/@/components/table/index.vue'
 import { refEl } from '/@/utils'
 import AccountForm from '/@/views/adminer/components/AccountForm.vue'
 import { CirclePlus, Delete, Edit } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
-import { reactive, ref } from 'vue'
+import { onMounted, reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
+
 const router = useRouter()
 
-const TableEl = refEl(Table)
+const tableEl = refEl(Table)
 
 const tableOptions = reactive({
   data: [] as AdminListInfo[],
@@ -49,13 +53,30 @@ const tableOptions = reactive({
   },
 })
 
-const getList = async (page: {}) => {
+const query = reactive({
+  keyWord: '',
+  permission: '',
+})
+
+const getList = async (page: PageParams) => {
   tableOptions.config.loading = true
-  const { data } = await getListApi({ ...page })
+  const { data } = await getListApi({ ...page, ...query })
   tableOptions.data = data.data
   tableOptions.config.total = data.total
   tableOptions.config.loading = false
 }
+
+const permissionList = ref<PermissionInfo[]>([])
+
+const getPermissionList = async () => {
+  const { data } = await getPermissionsApi()
+  permissionList.value = data.data
+}
+
+onMounted(() => {
+  getPermissionList()
+})
+
 const delAdmin = async ({ adminId, permissions }: AdminListInfo) => {
   if(permissions.includes('superAdmin')) {
     ElMessage.error('该账号为超级管理员，不可操作')
@@ -64,7 +85,7 @@ const delAdmin = async ({ adminId, permissions }: AdminListInfo) => {
   const { status } = await removeAdminApi({ adminId })
   if(status === 200) {
     ElMessage.success('删除成功')
-    TableEl.value.pageReset()
+    tableEl.value.pageReset()
   }
 }
 
@@ -90,11 +111,11 @@ const showAddWin = ref(false)
 
 <template>
   <div class="p8">
-    <Table ref="TableEl" v-bind="tableOptions" @getDate="getList"
+    <Table ref="tableEl" v-bind="tableOptions" @getDate="getList"
            @sortHeader="tableOptions.header = $event">
       <template v-slot:operate="{row}">
         <div class="cell">
-          <IconButton :icon="Edit" tooltip="编辑" type="success" @click="edit(row)"/>
+          <IconButton :icon="Edit" tooltip="编辑" type="primary" @click="edit(row)"/>
           <el-popconfirm title="确定删除该用户？该操作不可撤销！" @confirm="delAdmin(row)">
             <template v-slot:reference>
               <span class="ml12">
@@ -109,6 +130,23 @@ const showAddWin = ref(false)
       </template>
       <template v-slot:footerButton>
         <IconButton :icon="CirclePlus" text tooltip="添加" @click="showAddWin = true"/>
+      </template>
+      <!--   搜索   -->
+      <template #nicknameHeader>
+        <el-input v-model="query.keyWord" placeholder="搜索" @keyup.enter="tableEl.flushed()">
+          <template #prepend>昵称</template>
+        </el-input>
+      </template>
+      <!--   权限过滤   -->
+      <template #permissionsDescriptionHeader>
+        <div class="filter-box">
+          <el-select v-model="query.permission" class="filter-select" clearable filterable
+                     placeholder="选择权限" @change="tableEl.flushed()">
+            <el-option v-for="item in permissionList" :key="item.permissionId" :label="item.description"
+                       :value="item.permissionId">
+            </el-option>
+          </el-select>
+        </div>
       </template>
     </Table>
     <el-dialog v-model="showAddWin" width="360px">

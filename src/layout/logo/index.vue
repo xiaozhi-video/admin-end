@@ -9,10 +9,10 @@
 </template>
 
 <script setup lang="ts" name="layoutLogo">
-import { computed } from 'vue';
-import { storeToRefs } from 'pinia';
-import { useThemeConfig } from '/@/stores/themeConfig';
-import logoMini from '/@/assets/logo-mini.svg';
+import logoMini from '/@/assets/logo-mini.svg'
+import { useThemeConfig } from '/@/stores/themeConfig'
+import { storeToRefs } from 'pinia'
+import { computed } from 'vue'
 
 // 定义变量内容
 const storesThemeConfig = useThemeConfig();

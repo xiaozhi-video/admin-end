@@ -1,13 +1,13 @@
 import request from '/@/utils/request'
 
-export interface Permission {
+export interface PermissionInfo {
   permissionId: string,
   description: string
 }
 
 
 export const getPermissionsApi = () =>
-  request<{ data: Permission[] }>({
+  request<{ data: PermissionInfo[] }>({
     url: '/permission',
   })
 

@@ -3,6 +3,7 @@ import { addClassifyApi, ClassifyInfo, delClassifyApi, getClassifyListApi } from
 import IconButton from '/@/components/iconButton/index.vue'
 import UploadOne from '/@/components/uploadOne/index.vue'
 import { refEl } from '/@/utils'
+import { toOriginal } from '/@/utils/image'
 import { Close, Delete, Plus, Refresh, Upload } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
 import { onMounted, ref } from 'vue'
@@ -81,7 +82,7 @@ onMounted(() => {
             <UploadOne ref="uploadEl" class="preview-image" @success="uploaded"/>
           </div>
           <div v-else class="cell">
-            <el-image :preview-src-list="[row.icon]" :src="row.icon" class="preview-image"
+            <el-image :preview-src-list="[toOriginal(row.icon)]" :src="row.icon" class="preview-image"
                       preview-teleported></el-image>
           </div>
         </template>

@@ -31,14 +31,13 @@
 </template>
 
 <script setup lang="ts" name="navMenuVertical">
-import { defineAsyncComponent, reactive, computed, onMounted, watch } from 'vue';
-import { useRoute, onBeforeRouteUpdate, RouteRecordRaw } from 'vue-router';
-import { storeToRefs } from 'pinia';
-import { useThemeConfig } from '/@/stores/themeConfig';
-import other from '/@/utils/other';
-
 // 引入组件
-const SubItem = defineAsyncComponent(() => import('/@/layout/navMenu/subItem.vue'));
+import SubItem from '/@/layout/navMenu/subItem.vue'
+import { useThemeConfig } from '/@/stores/themeConfig'
+import other from '/@/utils/other'
+import { storeToRefs } from 'pinia'
+import { computed, onMounted, reactive, watch } from 'vue'
+import { onBeforeRouteUpdate, RouteRecordRaw, useRoute } from 'vue-router'
 
 // 定义父组件传过来的值
 const props = defineProps({

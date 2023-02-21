@@ -68,10 +68,7 @@
 			<template #dropdown>
 				<el-dropdown-menu>
 					<el-dropdown-item command="/home">{{ $t('message.user.dropdown1') }}</el-dropdown-item>
-					<el-dropdown-item command="wareHouse">{{ $t('message.user.dropdown6') }}</el-dropdown-item>
-					<el-dropdown-item command="/personal">{{ $t('message.user.dropdown2') }}</el-dropdown-item>
-					<el-dropdown-item command="/404">{{ $t('message.user.dropdown3') }}</el-dropdown-item>
-					<el-dropdown-item command="/401">{{ $t('message.user.dropdown4') }}</el-dropdown-item>
+					<el-dropdown-item command="/myInfo">{{ $t('message.user.dropdown2') }}</el-dropdown-item>
 					<el-dropdown-item divided command="logOut">{{ $t('message.user.dropdown5') }}</el-dropdown-item>
 				</el-dropdown-menu>
 			</template>
@@ -81,21 +78,21 @@
 </template>
 
 <script setup lang="ts" name="layoutBreadcrumbUser">
-import { defineAsyncComponent, ref, computed, reactive, onMounted } from 'vue';
-import { useRouter } from 'vue-router';
-import { ElMessageBox, ElMessage } from 'element-plus';
-import screenfull from 'screenfull';
-import { useI18n } from 'vue-i18n';
-import { storeToRefs } from 'pinia';
-import { useUserInfo } from '/@/stores/userInfo';
-import { useThemeConfig } from '/@/stores/themeConfig';
-import other from '/@/utils/other';
-import mittBus from '/@/utils/mitt';
-import { Session, Local } from '/@/utils/storage';
+import Search from '/@/layout/navBars/breadcrumb/search.vue'
 
 // 引入组件
-const UserNews = defineAsyncComponent(() => import('/@/layout/navBars/breadcrumb/userNews.vue'));
-const Search = defineAsyncComponent(() => import('/@/layout/navBars/breadcrumb/search.vue'));
+import UserNews from '/@/layout/navBars/breadcrumb/userNews.vue'
+import { useThemeConfig } from '/@/stores/themeConfig'
+import { useUserInfo } from '/@/stores/userInfo'
+import mittBus from '/@/utils/mitt'
+import other from '/@/utils/other'
+import { Local, Session } from '/@/utils/storage'
+import { ElMessage, ElMessageBox } from 'element-plus'
+import { storeToRefs } from 'pinia'
+import screenfull from 'screenfull'
+import { computed, onMounted, reactive, ref } from 'vue'
+import { useI18n } from 'vue-i18n'
+import { useRouter } from 'vue-router'
 
 // 定义变量内容
 const { locale, t } = useI18n();

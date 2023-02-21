@@ -150,10 +150,6 @@ function bannedChange(val: number | '') {
 .filter-title {
   flex-shrink: 0;
 }
-
-.filter-select {
-  margin-left: 6px;
-}
 </style>
 
 <script lang="ts">

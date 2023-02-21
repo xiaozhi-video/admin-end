@@ -11,16 +11,15 @@
 </template>
 
 <script setup lang="ts" name="layoutDefaults">
-import { defineAsyncComponent, watch, onMounted, nextTick, ref } from 'vue';
-import { useRoute } from 'vue-router';
-import { storeToRefs } from 'pinia';
-import { useThemeConfig } from '/@/stores/themeConfig';
-import { NextLoading } from '/@/utils/loading';
-
 // 引入组件
-const LayoutAside = defineAsyncComponent(() => import('/@/layout/component/aside.vue'));
-const LayoutHeader = defineAsyncComponent(() => import('/@/layout/component/header.vue'));
-const LayoutMain = defineAsyncComponent(() => import('/@/layout/component/main.vue'));
+import LayoutAside from '/@/layout/component/aside.vue'
+import LayoutHeader from '/@/layout/component/header.vue'
+import LayoutMain from '/@/layout/component/main.vue'
+import { useThemeConfig } from '/@/stores/themeConfig'
+import { NextLoading } from '/@/utils/loading'
+import { storeToRefs } from 'pinia'
+import { nextTick, onMounted, ref, watch } from 'vue'
+import { useRoute } from 'vue-router'
 
 // 定义变量内容
 const layoutScrollbarRef = ref<RefType>('');

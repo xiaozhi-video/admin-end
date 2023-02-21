@@ -4,11 +4,12 @@ import { PageParams } from '/@/api/user'
 import { auditApi, getVideoApi, VideoInfo } from '/@/api/video'
 import IconButton from '/@/components/iconButton/index.vue'
 import Table from '/@/components/table/index.vue'
-import { refEl } from '/@/utils'
+import { refEl, toPlay } from '/@/utils'
 import { Upload, VideoCameraFilled } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
 import { onMounted, reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
+
 const router = useRouter()
 
 const tableEl = refEl(Table)
@@ -105,15 +106,6 @@ const audit = async (row: VideoInfo) => {
   }
 }
 
-function toPlay(videoId: string) {
-  router.push({
-    name: 'videoPlay',
-    query: {
-      videoId
-    }
-  })
-}
-
 onMounted(() => {
   getClassify()
 })
@@ -126,12 +118,10 @@ onMounted(() => {
            @sortHeader="tableOptions.header = $event">
       <!--  操作    -->
       <template v-slot:operate="{row}">
-        <div class="cell">
-          <IconButton :icon="Upload" tooltip="通过审核"
-                      @click="audit(row)"/>
-          <IconButton :icon="VideoCameraFilled" tooltip="前往播放"
-                      @click="toPlay(row.videoId)"/>
-        </div>
+        <IconButton :icon="Upload" tooltip="通过审核"
+                    @click="audit(row)" type="success"/>
+        <IconButton :icon="VideoCameraFilled" tooltip="前往播放"
+                    @click="toPlay(row.videoId)"/>
       </template>
       <!--   搜索   -->
       <template #titleHeader>
@@ -143,7 +133,7 @@ onMounted(() => {
       <template #classifyHeader>
         <div class="filter-box">
           <el-select v-model="query.classify" class="filter-select" clearable filterable
-                     @change="tableEl.flushed()" placeholder="选择分类">
+                     placeholder="选择分类" @change="tableEl.flushed()">
             <el-option v-for="item in classifyList" :key="item.name" :label="item.name"
                        :value="item.name">
             </el-option>
@@ -168,10 +158,6 @@ onMounted(() => {
 
 .filter-title {
   flex-shrink: 0;
-}
-
-.filter-select {
-  margin-left: 6px;
 }
 </style>
 <script lang="ts">

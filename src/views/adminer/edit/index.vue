@@ -1,11 +1,11 @@
 <script lang="ts" setup>
 import { getFromIdApi, resetPassApi } from '/@/api/admin'
-import { getPermissionsApi, Permission, putPermissionApi } from '/@/api/permission'
+import { getPermissionsApi, PermissionInfo, putPermissionApi } from '/@/api/permission'
 import IconButton from '/@/components/iconButton/index.vue'
 import { refEl } from '/@/utils'
 import { toOriginal } from '/@/utils/image'
 import { RefreshRight, Upload } from '@element-plus/icons-vue'
-import { ElMessage, ElMessageBox, ElTable } from 'element-plus'
+import { ElLoading, ElMessage, ElMessageBox, ElTable } from 'element-plus'
 import { computed, onMounted, reactive, ref } from 'vue'
 import { useRoute } from 'vue-router'
 
@@ -20,7 +20,7 @@ const form = reactive({
   permissions: [] as string[],
 })
 
-const permissions = ref([] as Permission[])
+const permissions = ref([] as PermissionInfo[])
 const permissionsLoading = ref(false)
 const permissionChcked = ref(false)
 
@@ -50,7 +50,7 @@ const getPermissions = async () => {
   permissionChcked.value = false
 }
 
-const selectionChange = (selected: Permission[]) => {
+const selectionChange = (selected: PermissionInfo[]) => {
   permissionChcked.value = true
   form.permissions = selected.map(permission => permission.permissionId)
 }
@@ -75,9 +75,22 @@ const submit = async () => {
 }
 
 const resetPass = async () => {
-  const { data, status } = await resetPassApi({ adminId: form.adminId })
-  if(status === 200) {
-    ElMessageBox.alert(`以下内容只会显示一次，请立即保存您的新密码：\n${ data.password }`, '密码已重置')
+  try {
+    await ElMessageBox.confirm('该操作不可撤销！', '确定重置密码？', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning',
+    })
+    const ls = ElLoading.service()
+    const { data, status } = await resetPassApi({ adminId: form.adminId })
+    ls.close()
+    if(status === 200) {
+      ElMessageBox.alert(`以下内容只会显示一次，请立即保存您的新密码：\n${ data.password }`, '密码已重置', {
+        confirmButtonText: '完成',
+        type: 'warning',
+      })
+    }
+  } catch(err) { /* empty */
   }
 }
 
@@ -89,27 +102,28 @@ onMounted(() => {
 
 <template>
   <div class="p8">
-    <el-skeleton animated :loading="loading">
+    <el-skeleton :loading="loading" animated>
       <template #template>
         <el-descriptions :column="3" title="管理员信息">
           <el-descriptions-item class="p8" label="用户名:" width="33%">
-            <el-skeleton-item class="inline" variant="text" style="width: calc(100% - 80px);"/>
+            <el-skeleton-item class="inline" style="width: calc(100% - 80px);" variant="text"/>
           </el-descriptions-item>
           <el-descriptions-item class="p8" label="头像:" width="33%">
-            <el-skeleton-item class="inline" variant="image" style="width: 64px;height: 64px;"/>
+            <el-skeleton-item class="inline" style="width: 64px;height: 64px;" variant="image"/>
           </el-descriptions-item>
           <el-descriptions-item class="p8" label="密码:" width="33%">
-            <el-skeleton-item class="inline" variant="text"  style="width: calc(100% - 80px);"/>
+            <el-skeleton-item class="inline" style="width: calc(100% - 80px);" variant="text"/>
           </el-descriptions-item>
         </el-descriptions>
       </template>
       <template #default>
         <el-descriptions :column="3" title="管理员信息">
           <el-descriptions-item class="p8" label="用户名:" width="33%">
-            {{ form.nickname}}
+            {{ form.nickname }}
           </el-descriptions-item>
           <el-descriptions-item class="p8" label="头像:" width="33%">
-            <el-image :src="form.photo" class="preview-image" :preview-src-list="[toOriginal(form.photo)]" preview-teleported/>
+            <el-image :preview-src-list="[toOriginal(form.photo)]" :src="form.photo"
+                      class="preview-image" preview-teleported/>
           </el-descriptions-item>
           <el-descriptions-item class="p8" label="密码:" width="33%">
             ********

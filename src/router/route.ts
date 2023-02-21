@@ -57,9 +57,20 @@ export const dynamicRoutes: Array<RouteRecordRaw> = [
 					isHide: false,
 					isKeepAlive: true,
 					isAffix: true,
-					isIframe: false,
 					roles: ['superAdmin', 'common'],
 					icon: 'iconfont icon-shouye',
+				},
+			},
+			{
+				path: '/myInfo',
+				name: 'myInfo',
+				component: () => import('/@/views/myInfo/index.vue'),
+				meta: {
+					title: 'message.router.myInfo',
+					isLink: '',
+					isHide: true,
+					isKeepAlive: true,
+					roles: ['common'],
 				},
 			},
 			{

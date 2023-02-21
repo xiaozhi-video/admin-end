@@ -60,11 +60,11 @@
 </template>
 
 <script setup lang="ts" name="layoutLockScreen">
-import { nextTick, onMounted, reactive, ref, onUnmounted } from 'vue';
-import { formatDate } from '/@/utils/formatTime';
-import { Local } from '/@/utils/storage';
-import { storeToRefs } from 'pinia';
-import { useThemeConfig } from '/@/stores/themeConfig';
+import { useThemeConfig } from '/@/stores/themeConfig'
+import { formatDate } from '/@/utils/formatTime'
+import { Local } from '/@/utils/storage'
+import { storeToRefs } from 'pinia'
+import { nextTick, onMounted, onUnmounted, reactive, ref } from 'vue'
 
 // 定义变量内容
 const layoutLockScreenDateRef = ref<HtmlType>();

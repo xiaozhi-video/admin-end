@@ -21,8 +21,8 @@
 </template>
 
 <script setup lang="ts" name="layoutIframeView">
-import { computed, watch, ref, nextTick } from 'vue';
-import { useRoute } from 'vue-router';
+import { computed, nextTick, ref, watch } from 'vue'
+import { useRoute } from 'vue-router'
 
 // 定义父组件传过来的值
 const props = defineProps({

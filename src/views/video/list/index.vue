@@ -4,11 +4,10 @@ import { PageParams } from '/@/api/user'
 import { getVideoApi, unpushApi, VideoInfo } from '/@/api/video'
 import IconButton from '/@/components/iconButton/index.vue'
 import Table from '/@/components/table/index.vue'
-import { Download, VideoCameraFilled } from '@element-plus/icons-vue'
+import { copyText, toPlay } from '/@/utils'
+import { DocumentCopy, Download, VideoCameraFilled } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
 import { onMounted, reactive, ref } from 'vue'
-import { useRouter } from 'vue-router'
-const router = useRouter()
 
 const tableEl = ref<InstanceType<typeof Table>>()
 
@@ -76,7 +75,7 @@ const tableOptions = reactive({
     isSerialNo: false, // 是否显示表格序号
     isSelection: true, // 是否显示表格多选
     isOperate: true, // 是否显示表格操作栏
-    operateWidth: '160px',
+    operateWidth: '180px',
   },
 })
 
@@ -121,15 +120,6 @@ function stateChange(val: number | '') {
   tableEl.value.flushed()
 }
 
-function toPlay(videoId: string) {
-  router.push({
-    name: 'videoPlay',
-    query: {
-      videoId
-    }
-  })
-}
-
 onMounted(() => {
   getClassify()
 })
@@ -142,12 +132,12 @@ onMounted(() => {
            @sortHeader="tableOptions.header = $event">
       <!--  操作    -->
       <template v-slot:operate="{row}">
-        <div class="cell">
-          <IconButton :disabled="row.state < 2" :icon="Download" tooltip="取消发布"
-                      @click="unpush(row)"/>
-          <IconButton :icon="VideoCameraFilled" tooltip="前往播放"
-                      @click="toPlay(row.videoId)"/>
-        </div>
+        <IconButton :disabled="row.state < 2" :icon="Download" tooltip="取消发布"
+                    @click="unpush(row)" type="warning"/>
+        <IconButton :icon="VideoCameraFilled" tooltip="前往播放"
+                    @click="toPlay(row.videoId)"/>
+        <IconButton :icon="DocumentCopy" tooltip="复制ID"
+                    @click="copyText(row.videoId)"/>
       </template>
       <!--   状态   -->
       <template v-slot:state="{row}">
@@ -165,7 +155,7 @@ onMounted(() => {
       <template #classifyHeader>
         <div class="filter-box">
           <el-select v-model="query.classify" class="filter-select" clearable filterable
-                     @change="tableEl.flushed()" placeholder="选择分类">
+                     placeholder="选择分类" @change="tableEl.flushed()">
             <el-option v-for="item in classifyList" :key="item.name" :label="item.name"
                        :value="item.name">
             </el-option>
@@ -176,7 +166,7 @@ onMounted(() => {
       <template #stateHeader>
         <div class="filter-box">
           <el-select v-model="query.state" class="filter-select" clearable filterable
-                     @change="stateChange" placeholder="选择状态">
+                     placeholder="选择状态" @change="stateChange">
             <el-option v-for="item in stateList" :key="item.value" :label="item.label"
                        :value="item.value">
             </el-option>
@@ -201,10 +191,6 @@ onMounted(() => {
 
 .filter-title {
   flex-shrink: 0;
-}
-
-.filter-select {
-  margin-left: 6px;
 }
 </style>
 <script lang="ts">

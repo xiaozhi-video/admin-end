@@ -31,16 +31,15 @@
 </template>
 
 <script setup lang="ts" name="navMenuHorizontal">
-import { defineAsyncComponent, reactive, computed, onMounted, nextTick, onBeforeMount, ref } from 'vue';
-import { useRoute, onBeforeRouteUpdate, RouteRecordRaw } from 'vue-router';
-import { storeToRefs } from 'pinia';
-import { useRoutesList } from '/@/stores/routesList';
-import { useThemeConfig } from '/@/stores/themeConfig';
-import other from '/@/utils/other';
-import mittBus from '/@/utils/mitt';
-
 // 引入组件
-const SubItem = defineAsyncComponent(() => import('/@/layout/navMenu/subItem.vue'));
+import SubItem from '/@/layout/navMenu/subItem.vue'
+import { useRoutesList } from '/@/stores/routesList'
+import { useThemeConfig } from '/@/stores/themeConfig'
+import mittBus from '/@/utils/mitt'
+import other from '/@/utils/other'
+import { storeToRefs } from 'pinia'
+import { computed, nextTick, onBeforeMount, onMounted, reactive, ref } from 'vue'
+import { onBeforeRouteUpdate, RouteRecordRaw, useRoute } from 'vue-router'
 
 // 定义父组件传过来的值
 const props = defineProps({

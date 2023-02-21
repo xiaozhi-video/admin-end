@@ -35,7 +35,12 @@ export interface AdminListInfo {
   permissionsDescription: string[]
 }
 
-export const getListApi = (data: { keyWord?: string; permission?: string, } & PageParams) =>
+interface ListParams extends PageParams {
+  keyWord?: string
+  permission?: string
+}
+
+export const getListApi = (data: ListParams) =>
   request<Pages<AdminListInfo>>({
     url: '/admin/list',
     data,
@@ -58,5 +63,5 @@ export const resetPassApi = (data: { adminId: number }) =>
   request({
     url: '/admin/resetPassword',
     method: 'POST',
-    data
+    data,
   })

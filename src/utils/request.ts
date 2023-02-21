@@ -44,7 +44,6 @@ service.interceptors.response.use(
   },
   (error) => {
     const res = error.response
-
     // 对响应错误做点什么
     if(error.message.indexOf('timeout') != -1) {
       ElMessage.error('网络超时')
@@ -53,7 +52,6 @@ service.interceptors.response.use(
     } else if(res.status === 401) {
       Session.clear() // 清除浏览器全部临时缓存
       window.location.href = '/' // 去登录页
-      alert(res.status)
       ElMessageBox.alert('你已被登出，请重新登录', '提示', {})
       return Promise.reject()
     } else if(res.status !== 200) {

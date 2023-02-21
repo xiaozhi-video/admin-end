@@ -3,11 +3,11 @@
 </template>
 
 <script setup lang="ts" name="layout">
-import { onBeforeMount, onUnmounted, defineAsyncComponent } from 'vue';
-import { storeToRefs } from 'pinia';
-import { useThemeConfig } from '/@/stores/themeConfig';
-import { Local } from '/@/utils/storage';
-import mittBus from '/@/utils/mitt';
+import { useThemeConfig } from '/@/stores/themeConfig'
+import mittBus from '/@/utils/mitt'
+import { Local } from '/@/utils/storage'
+import { storeToRefs } from 'pinia'
+import { defineAsyncComponent, onBeforeMount, onUnmounted } from 'vue'
 
 // 引入组件
 const layouts: any = {

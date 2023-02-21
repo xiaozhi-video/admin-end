@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import { CarouselInfo } from '/@/api/carousel'
 import CarouselItem from '/@/views/operation/homeCarousel/components/CarouselItem.vue'
-import { ref } from 'vue'
 
 const props = defineProps<{
   modelValue: CarouselInfo[]
@@ -39,22 +38,23 @@ function del(item: CarouselInfo) {
   emit('update:modelValue', props.modelValue.filter(e => e !== item))
 }
 
-let items = [] as any[]
-
-function getRef(el: any) {
-  if(el) items.push(el)
-}
-
-const validates = ref<Function[]>([])
-
 const map = new Map<string, Function>()
 
 defineExpose({
   async validate() {
-    for(let i = 0; i < validates.value.length; i++) {
-      const e = validates.value[i]
+    const validates = [] as { id: string, validate: Function }[]
+    props.modelValue.forEach(e => {
+      validates.push({ id: e.id, validate: map.get(e.id)! })
+    })
+    map.clear()
+    for(let i = 0; i < validates.length; i++) {
+      const e = validates[i]
+      map.set(e.id, e.validate)
+    }
+    for(let i = 0; i < validates.length; i++) {
+      const e = validates[i]
       try {
-        await e()
+        await e.validate()
       } catch(err) {
         emit('toView', i)
         return false
@@ -69,16 +69,14 @@ defineExpose({
 <template>
   <transition-group class="box" name="fade" tag="div">
     <CarouselItem v-for="(item, index) in modelValue" :key="item.id"
-                  :ref="getRef"
                   :index="index"
                   :length="modelValue.length"
                   :modelValue="item"
                   @del="del(item)"
                   @down="down"
-                  @up="up"
                   @mounted="map.set($event.id, $event.validate)"
+                  @up="up"
                   @update:modelValue="update(item, $event)"
-                  v-model:validate="validates[index]"
     />
   </transition-group>
 </template>

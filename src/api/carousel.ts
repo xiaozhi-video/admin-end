@@ -3,9 +3,10 @@ import request from '/@/utils/request'
 export interface CarouselInfo {
   id: string
   image: string
-  url: string
   imagePreview: string
   index?: number
+  url?: string
+  videoId?: string
 }
 
 export const getCarouselApi = () =>

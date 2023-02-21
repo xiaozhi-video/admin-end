@@ -4,13 +4,18 @@ import { PageParams } from '/@/api/user'
 import { getRanking, getVideoApi, putRecommend, VideoInfo } from '/@/api/video'
 import IconButton from '/@/components/iconButton/index.vue'
 import Table from '/@/components/table/index.vue'
-import { refEl } from '/@/utils'
-import { Bottom, Sort, SortDown, SortUp, Upload, VideoCameraFilled } from '@element-plus/icons-vue'
+import { copyText, refEl, toPlay } from '/@/utils'
+import {
+  Bottom,
+  DocumentCopy,
+  Sort,
+  SortDown,
+  SortUp,
+  Upload,
+  VideoCameraFilled,
+} from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
 import { computed, onMounted, reactive, ref } from 'vue'
-import { useRouter } from 'vue-router'
-
-const router = useRouter()
 
 const tableEl = refEl(Table)
 
@@ -98,7 +103,7 @@ const tableOptions = reactive({
     isSerialNo: true, // 是否显示表格序号
     isSelection: false, // 是否显示表格多选
     isOperate: true, // 是否显示表格操作栏
-    operateWidth: '160px',
+    operateWidth: '180px',
   },
 })
 
@@ -121,15 +126,6 @@ const getList = async (page: PageParams) => {
 const getClassify = async () => {
   const { data } = await getClassifyListApi()
   classifyList.value = data.data
-}
-
-function toPlay(videoId: string) {
-  router.push({
-    name: 'videoPlay',
-    query: {
-      videoId,
-    },
-  })
 }
 
 const showEdit = ref(false)
@@ -183,7 +179,7 @@ const submit = async () => {
   loading.value = true
   const { data, status } = await putRecommend({ videoId: form.videoId, recommend: form.recommend })
   loading.value = false
-  if (status === 200) {
+  if(status === 200) {
     ElMessage.success('已提交')
     showEdit.value = false
     tableEl.value!.flushed()
@@ -202,11 +198,11 @@ onMounted(() => {
            @sortHeader="tableOptions.header = $event">
       <!--  操作    -->
       <template v-slot:operate="prop">
-        <div class="cell">
-          <IconButton :icon="Sort" tooltip="编辑" @click="edit(prop)"/>
-          <IconButton :icon="VideoCameraFilled" tooltip="前往播放"
-                      @click="toPlay(prop.row.videoId)"/>
-        </div>
+        <IconButton :icon="Sort" tooltip="编辑" @click="edit(prop)" type="primary"/>
+        <IconButton :icon="VideoCameraFilled" tooltip="前往播放"
+                    @click="toPlay(prop.row.videoId)"/>
+        <IconButton :icon="DocumentCopy" tooltip="复制ID"
+                    @click="copyText(prop.row.videoId)"/>
       </template>
       <!--   搜索   -->
       <template #titleHeader>
@@ -240,7 +236,7 @@ onMounted(() => {
       </template>
     </Table>
     <el-dialog v-model="showEdit" width="280px">
-      <div class="sort-edit" v-loading="loading">
+      <div v-loading="loading" class="sort-edit">
         <el-form :model="form" class="l" inline title="推荐指数">
           <el-form-item label="推荐指数" prop="recommend">
             <el-input-number v-model="form.recommend"></el-input-number>
@@ -267,7 +263,7 @@ onMounted(() => {
             </span>
           </el-descriptions-item>
         </el-descriptions>
-        <el-button :icon="Upload" @click="submit">提交</el-button>
+        <el-button :icon="Upload" @click="submit" type="primary">提交</el-button>
       </div>
     </el-dialog>
   </div>
@@ -287,10 +283,6 @@ onMounted(() => {
 
 .filter-title {
   flex-shrink: 0;
-}
-
-.filter-select {
-  margin-left: 6px;
 }
 
 .mid {

@@ -25,9 +25,9 @@
 </template>
 
 <script setup lang="ts" name="navMenuSubItem">
-import { computed } from 'vue';
-import { RouteRecordRaw } from 'vue-router';
-import other from '/@/utils/other';
+import other from '/@/utils/other'
+import { computed } from 'vue'
+import { RouteRecordRaw } from 'vue-router'
 
 // 定义父组件传过来的值
 const props = defineProps({

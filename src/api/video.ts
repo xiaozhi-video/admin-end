@@ -26,27 +26,33 @@ export interface VideoInfo {
 
 export const getVideoApi = (data: VideoParams) =>
   request<Pages<VideoInfo>>({
-    url: 'admin/video',
+    url: '/admin/video',
     data,
   })
 
 export const unpushApi = (data: { videoId: string }) =>
   request<Pages<VideoInfo>>({
-    url: 'video/unpush',
+    url: '/video/unpush',
     method: 'PUT',
     data,
   })
 
 export const auditApi = (data: { videoId: string }) =>
   request<Pages<VideoInfo>>({
-    url: 'video/audit',
+    url: '/video/audit',
     method: 'PUT',
     data,
   })
 
 export const getFromId = (data: { videoId: string }) =>
-  request<{ data: VideoInfo }>({
+  request<{ data: VideoInfo & { coverPreview: string } }>({
     url: '/admin/video/fromId',
+    data,
+  })
+
+export const getCover = (data: { videoId: string }) =>
+  request<{ cover: string, coverPreview: string }>({
+    url: '/admin/video/cover',
     data,
   })
 
