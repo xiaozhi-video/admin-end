@@ -53,6 +53,16 @@ function success({ url, path }: ImageInfo) {
   update({ image: path, imagePreview: url })
 }
 
+function changeHandoff() {
+  if (handoff.value) {
+    const url = props.modelValue.videoId
+    update({ url, videoId: '' })
+  } else {
+    const videoId = props.modelValue.url
+    update({ url: '', videoId })
+  }
+}
+
 const appCoverloading = ref(false)
 
 const getVideoInfo = async () => {
@@ -103,7 +113,7 @@ onMounted(() => {
       <div class="right">
         <el-form-item :prop="handoff ? 'url': 'videoId'" label="URL">
           <template #label>
-            <el-radio-group v-model="handoff">
+            <el-radio-group v-model="handoff" @change="changeHandoff">
               <el-radio-button :label="0">视频</el-radio-button>
               <el-radio-button :label="1">外链</el-radio-button>
             </el-radio-group>
