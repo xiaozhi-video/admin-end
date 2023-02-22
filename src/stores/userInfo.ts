@@ -14,6 +14,7 @@ export const useUserInfo = defineStore('userInfo', {
 			time: 0,
 			roles: [],
 			authBtnList: [],
+			permissionsDescription: []
 		},
 	}),
 	actions: {
@@ -27,6 +28,7 @@ export const useUserInfo = defineStore('userInfo', {
 					userInfos.time = 0
 					userInfos.roles = []
 					userInfos.authBtnList = []
+					userInfos.permissionsDescription = []
 					Session.remove('token')
 				}
 				return
@@ -39,6 +41,7 @@ export const useUserInfo = defineStore('userInfo', {
 				time: new Date().getTime(),
 				roles: data.permissions,
 				authBtnList: data.authButton,
+				permissionsDescription: data.permissionsDescription
 			}
 			this.userInfos = info
 		},

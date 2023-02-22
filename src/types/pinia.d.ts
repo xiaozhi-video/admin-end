@@ -6,6 +6,7 @@
 declare interface UserInfosState<T = any> {
 	userInfos: {
 		authBtnList: string[]
+		permissionsDescription: string[]
 		photo: string
 		roles: string[]
 		time: number
