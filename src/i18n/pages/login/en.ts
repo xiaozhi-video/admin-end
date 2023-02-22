@@ -26,4 +26,4 @@ export default {
 		text: 'Open the mobile phone to scan and quickly log in / register',
 	},
 	signInText: 'welcome back!',
-};
+}

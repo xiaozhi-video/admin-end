@@ -14,10 +14,10 @@
 
 <script setup lang="ts" name="wngEditor">
 // https://www.wangeditor.com/v5/for-frame.html#vue3
-import '@wangeditor/editor/dist/css/style.css';
-import { reactive, shallowRef, watch, onBeforeUnmount } from 'vue';
-import { IDomEditor } from '@wangeditor/editor';
-import { Toolbar, Editor } from '@wangeditor/editor-for-vue';
+import '@wangeditor/editor/dist/css/style.css'
+import { reactive, shallowRef, watch, onBeforeUnmount } from 'vue'
+import { IDomEditor } from '@wangeditor/editor'
+import { Toolbar, Editor } from '@wangeditor/editor-for-vue'
 
 // 定义父组件传过来的值
 const props = defineProps({
@@ -46,56 +46,56 @@ const props = defineProps({
 	getHtml: String,
 	// 双向绑定，用于获取 editor.getText()
 	getText: String,
-});
+})
 
 // 定义子组件向父组件传值/事件
-const emit = defineEmits(['update:getHtml', 'update:getText']);
+const emit = defineEmits(['update:getHtml', 'update:getText'])
 
 // 定义变量内容
-const editorRef = shallowRef();
+const editorRef = shallowRef()
 const state = reactive({
 	editorConfig: {
 		placeholder: props.placeholder,
 	},
 	editorVal: props.getHtml,
-});
+})
 
 // 编辑器回调函数
 const handleCreated = (editor: IDomEditor) => {
-	editorRef.value = editor;
-};
+	editorRef.value = editor
+}
 // 编辑器内容改变时
 const handleChange = (editor: IDomEditor) => {
-	emit('update:getHtml', editor.getHtml());
-	emit('update:getText', editor.getText());
-};
+	emit('update:getHtml', editor.getHtml())
+	emit('update:getText', editor.getText())
+}
 // 页面销毁时
 onBeforeUnmount(() => {
-	const editor = editorRef.value;
-	if (editor == null) return;
-	editor.destroy();
-});
+	const editor = editorRef.value
+	if (editor == null) return
+	editor.destroy()
+})
 // 监听是否禁用改变
 // https://gitee.com/lyt-top/vue-next-admin/issues/I4LM7I
 watch(
 	() => props.disable,
 	(bool) => {
-		const editor = editorRef.value;
-		if (editor == null) return;
-		bool ? editor.disable() : editor.enable();
+		const editor = editorRef.value
+		if (editor == null) return
+		bool ? editor.disable() : editor.enable()
 	},
 	{
 		deep: true,
 	}
-);
+)
 // 监听双向绑定值改变，用于回显
 watch(
 	() => props.getHtml,
 	(val) => {
-		state.editorVal = val;
+		state.editorVal = val
 	},
 	{
 		deep: true,
 	}
-);
+)
 </script>

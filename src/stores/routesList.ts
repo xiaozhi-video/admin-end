@@ -1,4 +1,4 @@
-import { defineStore } from 'pinia';
+import { defineStore } from 'pinia'
 
 /**
  * 路由列表
@@ -14,13 +14,13 @@ export const useRoutesList = defineStore('routesList', {
 	}),
 	actions: {
 		async setRoutesList(data: Array<any>) {
-			this.routesList = data;
+			this.routesList = data
 		},
 		async setColumnsMenuHover(bool: Boolean) {
-			this.isColumnsMenuHover = bool;
+			this.isColumnsMenuHover = bool
 		},
 		async setColumnsNavHover(bool: Boolean) {
-			this.isColumnsNavHover = bool;
+			this.isColumnsNavHover = bool
 		},
 	},
-});
+})

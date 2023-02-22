@@ -1,7 +1,7 @@
 <template>
-  <el-header v-show="!isTagsViewCurrenFull" class="layout-header">
-    <NavBarsIndex/>
-  </el-header>
+	<el-header v-show="!isTagsViewCurrenFull" class="layout-header">
+		<NavBarsIndex />
+	</el-header>
 </template>
 
 <script lang="ts" name="layoutHeader" setup>

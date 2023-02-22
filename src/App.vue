@@ -1,11 +1,11 @@
 <template>
-  <el-config-provider :locale="getGlobalI18n" :size="getGlobalComponentSize">
-    <router-view v-show="themeConfig.lockScreenTime > 1"/>
-    <LockScreen v-if="themeConfig.isLockScreen"/>
-    <Setings v-show="themeConfig.lockScreenTime > 1" ref="setingsRef"/>
-    <CloseFull v-if="!themeConfig.isLockScreen"/>
-    <!--		<Upgrade v-if="getVersion" />-->
-  </el-config-provider>
+	<el-config-provider :locale="getGlobalI18n" :size="getGlobalComponentSize">
+		<router-view v-show="themeConfig.lockScreenTime > 1" />
+		<LockScreen v-if="themeConfig.isLockScreen" />
+		<Setings v-show="themeConfig.lockScreenTime > 1" ref="setingsRef" />
+		<CloseFull v-if="!themeConfig.isLockScreen" />
+		<!--		<Upgrade v-if="getVersion" />-->
+	</el-config-provider>
 </template>
 
 <script lang="ts" name="app" setup>
@@ -16,16 +16,7 @@ import other from '/@/utils/other'
 import setIntroduction from '/@/utils/setIconfont'
 import { Local, Session } from '/@/utils/storage'
 import { storeToRefs } from 'pinia'
-import {
-  computed,
-  defineAsyncComponent,
-  nextTick,
-  onBeforeMount,
-  onMounted,
-  onUnmounted,
-  ref,
-  watch,
-} from 'vue'
+import { computed, defineAsyncComponent, nextTick, onBeforeMount, onMounted, onUnmounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
 
@@ -54,54 +45,53 @@ const { themeConfig } = storeToRefs(storesThemeConfig)
 // });
 // 获取全局组件大小
 const getGlobalComponentSize = computed(() => {
-  return other.globalComponentSize()
+	return other.globalComponentSize()
 })
 // 获取全局 i18n
 const getGlobalI18n = computed(() => {
-  return messages.value[locale.value]
+	return messages.value[locale.value]
 })
 // 设置初始化，防止刷新时恢复默认
 onBeforeMount(() => {
-  // 设置批量第三方 icon 图标
-  setIntroduction.cssCdn()
-  // 设置批量第三方 js
-  setIntroduction.jsCdn()
+	// 设置批量第三方 icon 图标
+	setIntroduction.cssCdn()
+	// 设置批量第三方 js
+	setIntroduction.jsCdn()
 })
 // 页面加载时
 onMounted(() => {
-  nextTick(() => {
-    // 监听布局配'置弹窗点击打开
-    mittBus.on('openSetingsDrawer', () => {
-      setingsRef.value.openDrawer()
-    })
-    // 获取缓存中的布局配置
-    if(Local.get('themeConfig')) {
-      storesThemeConfig.setThemeConfig({ themeConfig: Local.get('themeConfig') })
-      document.documentElement.style.cssText = Local.get('themeConfigStyle')
-    }
-    // 获取缓存中的全屏配置
-    if(Session.get('isTagsViewCurrenFull')) {
-      stores.setCurrenFullscreen(Session.get('isTagsViewCurrenFull'))
-    }
-  })
+	nextTick(() => {
+		// 监听布局配'置弹窗点击打开
+		mittBus.on('openSetingsDrawer', () => {
+			setingsRef.value.openDrawer()
+		})
+		// 获取缓存中的布局配置
+		if (Local.get('themeConfig')) {
+			storesThemeConfig.setThemeConfig({ themeConfig: Local.get('themeConfig') })
+			document.documentElement.style.cssText = Local.get('themeConfigStyle')
+		}
+		// 获取缓存中的全屏配置
+		if (Session.get('isTagsViewCurrenFull')) {
+			stores.setCurrenFullscreen(Session.get('isTagsViewCurrenFull'))
+		}
+	})
 })
 // 页面销毁时，关闭监听布局配置/i18n监听
 onUnmounted(() => {
-  mittBus.off('openSetingsDrawer', () => {
-  })
+	mittBus.off('openSetingsDrawer', () => {})
 })
 // 监听路由的变化，设置网站标题
 watch(
-    () => route.path,
-    () => {
-      other.useTitle()
-    },
-    {
-      deep: true,
-    },
+	() => route.path,
+	() => {
+		other.useTitle()
+	},
+	{
+		deep: true,
+	}
 )
 </script>
 
 <style lang="scss">
-@import "./assets/index.scss";
+@import './assets/index.scss';
 </style>

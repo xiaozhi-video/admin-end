@@ -37,16 +37,16 @@ const state = reactive({
 			time: '2020-12-08',
 		},
 	],
-});
+})
 
 // 全部已读点击
 const onAllReadClick = () => {
-	state.newsList = [];
-};
+	state.newsList = []
+}
 // 前往通知中心点击
 const onGoToGiteeClick = () => {
-	window.open('https://gitee.com/lyt-top/vue-next-admin');
-};
+	window.open('https://gitee.com/lyt-top/vue-next-admin')
+}
 </script>
 
 <style scoped lang="scss">

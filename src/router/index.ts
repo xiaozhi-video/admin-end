@@ -1,14 +1,14 @@
-import { initFrontEndControlRoutes } from '/@/router/frontEnd';
-import { notFoundAndNoPower, staticRoutes } from '/@/router/route';
-import pinia from '/@/stores/index';
-import { useKeepALiveNames } from '/@/stores/keepAliveNames';
-import { useRoutesList } from '/@/stores/routesList';
+import { initFrontEndControlRoutes } from '/@/router/frontEnd'
+import { notFoundAndNoPower, staticRoutes } from '/@/router/route'
+import pinia from '/@/stores/index'
+import { useKeepALiveNames } from '/@/stores/keepAliveNames'
+import { useRoutesList } from '/@/stores/routesList'
 // import { useThemeConfig } from '/@/stores/themeConfig';
-import { Session } from '/@/utils/storage';
-import NProgress from 'nprogress';
-import 'nprogress/nprogress.css';
-import { storeToRefs } from 'pinia';
-import { createRouter, createWebHashHistory } from 'vue-router';
+import { Session } from '/@/utils/storage'
+import NProgress from 'nprogress'
+import 'nprogress/nprogress.css'
+import { storeToRefs } from 'pinia'
+import { createRouter, createWebHashHistory } from 'vue-router'
 // import { initBackEndControlRoutes } from '/@/router/backEnd';
 
 /**
@@ -39,7 +39,7 @@ export const router = createRouter({
 	 *    防止 404、401 不在 layout 布局中，不设置的话，404、401 界面将全屏显示
 	 */
 	routes: [...notFoundAndNoPower, ...staticRoutes],
-});
+})
 
 /**
  * 路由多级嵌套数组处理成一维数组
@@ -47,13 +47,13 @@ export const router = createRouter({
  * @returns 返回处理后的一维路由菜单数组
  */
 export function formatFlatteningRoutes(arr: any) {
-	if (arr.length <= 0) return false;
+	if (arr.length <= 0) return false
 	for (let i = 0; i < arr.length; i++) {
 		if (arr[i].children) {
-			arr = arr.slice(0, i + 1).concat(arr[i].children, arr.slice(i + 1));
+			arr = arr.slice(0, i + 1).concat(arr[i].children, arr.slice(i + 1))
 		}
 	}
-	return arr;
+	return arr
 }
 
 /**
@@ -64,9 +64,9 @@ export function formatFlatteningRoutes(arr: any) {
  * @returns 返回将一维数组重新处理成 `定义动态路由（dynamicRoutes）` 的格式
  */
 export function formatTwoStageRoutes(arr: any) {
-	if (arr.length <= 0) return false;
-	const newArr: any = [];
-	const cacheList: Array<string> = [];
+	if (arr.length <= 0) return false
+	const newArr: any = []
+	const cacheList: Array<string> = []
 	arr.forEach((v: any) => {
 		if (v.path === '/') {
 			newArr.push({
@@ -76,60 +76,60 @@ export function formatTwoStageRoutes(arr: any) {
 				redirect: v.redirect,
 				meta: v.meta,
 				children: [],
-			});
+			})
 		} else {
 			// 判断是否是动态路由（xx/:id/:name），用于 tagsView 等中使用
 			// 修复：https://gitee.com/lyt-top/vue-next-admin/issues/I3YX6G
 			if (v.path.indexOf('/:') > -1) {
-				v.meta['isDynamic'] = true;
-				v.meta['isDynamicPath'] = v.path;
+				v.meta['isDynamic'] = true
+				v.meta['isDynamicPath'] = v.path
 			}
-			newArr[0].children.push({ ...v });
+			newArr[0].children.push({ ...v })
 			// 存 name 值，keep-alive 中 include 使用，实现路由的缓存
 			// 路径：/@/layout/routerView/parent.vue
 			if (newArr[0].meta.isKeepAlive && v.meta.isKeepAlive) {
-				cacheList.push(v.name);
-				const stores = useKeepALiveNames(pinia);
-				stores.setCacheKeepAlive(cacheList);
+				cacheList.push(v.name)
+				const stores = useKeepALiveNames(pinia)
+				stores.setCacheKeepAlive(cacheList)
 			}
 		}
-	});
-	return newArr;
+	})
+	return newArr
 }
 
 // 路由加载前
 router.beforeEach(async (to, from, next) => {
-	NProgress.configure({ showSpinner: false });
-	if (to.meta.title) NProgress.start();
-	const token = Session.get('token');
+	NProgress.configure({ showSpinner: false })
+	if (to.meta.title) NProgress.start()
+	const token = Session.get('token')
 	if (to.path === '/login' && !token) {
-		next();
-		NProgress.done();
+		next()
+		NProgress.done()
 	} else {
 		if (!token) {
-			next(`/login?redirect=${to.path}&params=${JSON.stringify(to.query ? to.query : to.params)}`);
-			Session.clear();
-			NProgress.done();
+			next(`/login?redirect=${to.path}&params=${JSON.stringify(to.query ? to.query : to.params)}`)
+			Session.clear()
+			NProgress.done()
 		} else if (token && to.path === '/login') {
-			next('/home');
-			NProgress.done();
+			next('/home')
+			NProgress.done()
 		} else {
-			const storesRoutesList = useRoutesList(pinia);
-			const { routesList } = storeToRefs(storesRoutesList);
+			const storesRoutesList = useRoutesList(pinia)
+			const { routesList } = storeToRefs(storesRoutesList)
 			if (routesList.value.length === 0) {
-				await initFrontEndControlRoutes();
-				next({ path: to.path, query: to.query });
+				await initFrontEndControlRoutes()
+				next({ path: to.path, query: to.query })
 			} else {
-				next();
+				next()
 			}
 		}
 	}
-});
+})
 
 // 路由加载后
 router.afterEach(() => {
-	NProgress.done();
-});
+	NProgress.done()
+})
 
 // 导出路由
-export default router;
+export default router

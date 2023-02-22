@@ -10,4 +10,4 @@ export default {
 		email: '请输入用户归属部门',
 		autograph: '请输入登陆账户名',
 	},
-};
+}

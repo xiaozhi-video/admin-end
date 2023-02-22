@@ -1,4 +1,4 @@
-import { RouteRecordRaw } from 'vue-router';
+import { RouteRecordRaw } from 'vue-router'
 
 /**
  * 建议：路由 path 路径与文件夹名称相同，找文件可浏览器地址找，方便定位文件位置
@@ -19,14 +19,14 @@ import { RouteRecordRaw } from 'vue-router';
 // 扩展 RouteMeta 接口
 declare module 'vue-router' {
 	interface RouteMeta {
-		title?: string;
-		isLink?: string;
-		isHide?: boolean;
-		isKeepAlive?: boolean;
-		isAffix?: boolean;
-		isIframe?: boolean;
-		roles?: string[];
-		icon?: string;
+		title?: string
+		isLink?: string
+		isHide?: boolean
+		isKeepAlive?: boolean
+		isAffix?: boolean
+		isIframe?: boolean
+		roles?: string[]
+		icon?: string
 	}
 }
 
@@ -140,7 +140,7 @@ export const dynamicRoutes: Array<RouteRecordRaw> = [
 					title: 'message.router.userIndex',
 					icon: 'fa fa-user-o',
 					isKeepAlive: true,
-					roles: ['superAdmin', 'userList']
+					roles: ['superAdmin', 'userList'],
 				},
 				children: [
 					{
@@ -164,7 +164,7 @@ export const dynamicRoutes: Array<RouteRecordRaw> = [
 					title: 'message.router.operationIndex',
 					icon: 'fa fa-sellsy',
 					isKeepAlive: true,
-					roles: ['superAdmin', 'homeRecommend', 'homeCarousel']
+					roles: ['superAdmin', 'homeRecommend', 'homeCarousel'],
 				},
 				children: [
 					{
@@ -188,8 +188,8 @@ export const dynamicRoutes: Array<RouteRecordRaw> = [
 							roles: ['superAdmin', 'homeCarousel'],
 							icon: 'fa fa-retweet',
 						},
-					}
-				]
+					},
+				],
 			},
 			{
 				path: '/adminer',
@@ -199,7 +199,7 @@ export const dynamicRoutes: Array<RouteRecordRaw> = [
 					title: 'message.router.adminerIndex',
 					icon: 'fa fa-user-secret',
 					isKeepAlive: true,
-					roles: ['superAdmin', 'adminerList', 'adminerPermission']
+					roles: ['superAdmin', 'adminerList', 'adminerPermission'],
 				},
 				children: [
 					{
@@ -212,7 +212,7 @@ export const dynamicRoutes: Array<RouteRecordRaw> = [
 							isKeepAlive: true,
 							roles: ['superAdmin', 'adminerList'],
 							icon: 'fa fa-th',
-						}
+						},
 					},
 					{
 						path: '/adminer/edit',
@@ -224,13 +224,13 @@ export const dynamicRoutes: Array<RouteRecordRaw> = [
 							isKeepAlive: false,
 							roles: ['superAdmin', 'adminerEdit'],
 							icon: 'fa fa-th',
-						}
-					}
-				]
+						},
+					},
+				],
 			},
 		],
 	},
-];
+]
 
 /**
  * 定义404、401界面
@@ -255,7 +255,7 @@ export const notFoundAndNoPower = [
 			isHide: true,
 		},
 	},
-];
+]
 
 /**
  * 定义静态路由（默认路由）
@@ -284,4 +284,4 @@ export const staticRoutes: Array<RouteRecordRaw> = [
 	// 		title: 'message.router.visualizingLinkDemo1',
 	// 	},
 	// },
-];
+]

@@ -36,14 +36,14 @@ const props = defineProps({
 		type: Array<RouteRecordRaw>,
 		default: () => [],
 	},
-});
+})
 
 // 获取父级菜单数据
 const chils = computed(() => {
-	return <RouteItems>props.chil;
-});
+	return <RouteItems>props.chil
+})
 // 打开外部链接
 const onALinkClick = (val: RouteItem) => {
-	other.handleOpenLink(val);
-};
+	other.handleOpenLink(val)
+}
 </script>

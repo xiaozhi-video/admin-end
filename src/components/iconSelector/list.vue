@@ -31,15 +31,15 @@ const props = defineProps({
 		type: String,
 		default: () => '',
 	},
-});
+})
 
 // 定义子组件向父组件传值/事件
-const emit = defineEmits(['get-icon']);
+const emit = defineEmits(['get-icon'])
 
 // 当前 icon 图标点击时
 const onColClick = (v: unknown | string) => {
-	emit('get-icon', v);
-};
+	emit('get-icon', v)
+}
 </script>
 
 <style scoped lang="scss">

@@ -19,29 +19,29 @@ import { reactive, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
 // 定义变量内容
-const route = useRoute();
+const route = useRoute()
 const state = reactive<LinkViewState>({
 	title: '',
 	isLink: '',
-});
+})
 
 // 立即前往
 const onGotoFullPage = () => {
-	const { origin, pathname } = window.location;
-	if (verifyUrl(<string>state.isLink)) window.open(state.isLink);
-	else window.open(`${origin}${pathname}#${state.isLink}`);
-};
+	const { origin, pathname } = window.location
+	if (verifyUrl(<string>state.isLink)) window.open(state.isLink)
+	else window.open(`${origin}${pathname}#${state.isLink}`)
+}
 // 监听路由的变化，设置内容
 watch(
 	() => route.path,
 	() => {
-		state.title = <string>route.meta.title;
-		state.isLink = <string>route.meta.isLink;
+		state.title = <string>route.meta.title
+		state.isLink = <string>route.meta.isLink
 	},
 	{
 		immediate: true,
 	}
-);
+)
 </script>
 
 <style scoped lang="scss">

@@ -15,19 +15,19 @@ import { storeToRefs } from 'pinia'
 import { computed } from 'vue'
 
 // 定义变量内容
-const storesThemeConfig = useThemeConfig();
-const { themeConfig } = storeToRefs(storesThemeConfig);
+const storesThemeConfig = useThemeConfig()
+const { themeConfig } = storeToRefs(storesThemeConfig)
 
 // 设置 logo 的显示。classic 经典布局默认显示 logo
 const setShowLogo = computed(() => {
-	let { isCollapse, layout } = themeConfig.value;
-	return !isCollapse || layout === 'classic' || document.body.clientWidth < 1000;
-});
+	let { isCollapse, layout } = themeConfig.value
+	return !isCollapse || layout === 'classic' || document.body.clientWidth < 1000
+})
 // logo 点击实现菜单展开/收起
 const onThemeConfigChange = () => {
-	if (themeConfig.value.layout === 'transverse') return false;
-	themeConfig.value.isCollapse = !themeConfig.value.isCollapse;
-};
+	if (themeConfig.value.layout === 'transverse') return false
+	themeConfig.value.isCollapse = !themeConfig.value.isCollapse
+}
 </script>
 
 <style scoped lang="scss">

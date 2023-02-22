@@ -189,4 +189,4 @@ export default {
 		btnTwo: 'Update now',
 		btnTwoLoading: 'Updating',
 	},
-};
+}

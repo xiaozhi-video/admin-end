@@ -189,4 +189,4 @@ export default {
 		btnTwo: '馬上更新',
 		btnTwoLoading: '更新中',
 	},
-};
+}

@@ -25,4 +25,4 @@ export default {
 		text: '打開手機掃一掃，快速登錄/注册',
 	},
 	signInText: '歡迎回來！',
-};
+}

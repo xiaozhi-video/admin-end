@@ -23,48 +23,48 @@ import { nextTick, onMounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
 // 定义变量内容
-const layoutScrollbarRef = ref<RefType>('');
-const layoutMainRef = ref<InstanceType<typeof LayoutMain>>();
-const route = useRoute();
-const storesThemeConfig = useThemeConfig();
-const { themeConfig } = storeToRefs(storesThemeConfig);
+const layoutScrollbarRef = ref<RefType>('')
+const layoutMainRef = ref<InstanceType<typeof LayoutMain>>()
+const route = useRoute()
+const storesThemeConfig = useThemeConfig()
+const { themeConfig } = storeToRefs(storesThemeConfig)
 
 // 重置滚动条高度
 const updateScrollbar = () => {
 	// 更新父级 scrollbar
-	layoutScrollbarRef.value.update();
+	layoutScrollbarRef.value.update()
 	// 更新子级 scrollbar
-	layoutMainRef.value!.layoutMainScrollbarRef.update();
-};
+	layoutMainRef.value!.layoutMainScrollbarRef.update()
+}
 // 重置滚动条高度，由于组件是异步引入的
 const initScrollBarHeight = () => {
 	nextTick(() => {
 		setTimeout(() => {
-			updateScrollbar();
-			layoutScrollbarRef.value.wrapRef.scrollTop = 0;
-			layoutMainRef.value!.layoutMainScrollbarRef.wrapRef.scrollTop = 0;
-		}, 500);
-	});
-};
+			updateScrollbar()
+			layoutScrollbarRef.value.wrapRef.scrollTop = 0
+			layoutMainRef.value!.layoutMainScrollbarRef.wrapRef.scrollTop = 0
+		}, 500)
+	})
+}
 // 页面加载时
 onMounted(() => {
-	initScrollBarHeight();
-});
+	initScrollBarHeight()
+})
 // 监听路由的变化，切换界面时，滚动条置顶
 watch(
 	() => route.path,
 	() => {
-		initScrollBarHeight();
+		initScrollBarHeight()
 	}
-);
+)
 // 监听 themeConfig 配置文件的变化，更新菜单 el-scrollbar 的高度
 watch(
 	themeConfig,
 	() => {
-		updateScrollbar();
+		updateScrollbar()
 	},
 	{
 		deep: true,
 	}
-);
+)
 </script>

@@ -1,8 +1,8 @@
 <template>
-  <div class="layout-navbars-container">
-    <BreadcrumbIndex/>
-    <TagsView v-if="setShowTagsView"/>
-  </div>
+	<div class="layout-navbars-container">
+		<BreadcrumbIndex />
+		<TagsView v-if="setShowTagsView" />
+	</div>
 </template>
 
 <script lang="ts" name="layoutNavBars" setup>
@@ -18,16 +18,16 @@ const { themeConfig } = storeToRefs(storesThemeConfig)
 
 // 是否显示 tagsView
 const setShowTagsView = computed(() => {
-  let { layout, isTagsview } = themeConfig.value
-  return layout !== 'classic' && isTagsview
+	let { layout, isTagsview } = themeConfig.value
+	return layout !== 'classic' && isTagsview
 })
 </script>
 
 <style lang="scss" scoped>
 .layout-navbars-container {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  height: 100%;
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	height: 100%;
 }
 </style>

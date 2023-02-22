@@ -10,4 +10,4 @@ export default {
 		email: 'Please enter the users Department',
 		autograph: 'Please enter the login account name',
 	},
-};
+}

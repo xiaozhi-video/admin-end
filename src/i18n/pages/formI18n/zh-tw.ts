@@ -10,4 +10,4 @@ export default {
 		email: '請輸入用戶歸屬部門',
 		autograph: '請輸入登入帳戶名',
 	},
-};
+}

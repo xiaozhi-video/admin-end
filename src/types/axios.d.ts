@@ -1,5 +1,5 @@
 /* eslint-disable */
-import * as axios from 'axios';
+import * as axios from 'axios'
 
 // 扩展 axios 数据返回类型，可自行扩展
 declare module 'axios' {
@@ -8,6 +8,6 @@ declare module 'axios' {
 		// data: T;
 		// message: string;
 		// type?: string;
-		[key: string]: T;
+		[key: string]: T
 	}
 }
