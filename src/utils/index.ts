@@ -16,23 +16,21 @@ export function randomString(e = 32) {
 }
 
 export function copyText(text: string) {
-  navigator.clipboard.writeText(text).then(() => {
-    const textareaC = document.createElement('textarea')
-    textareaC.setAttribute('readonly', 'readonly')
-    textareaC.value = text
-    document.body.appendChild(textareaC)
-    textareaC.select()
-    if(document.execCommand) {
-      const res = document.execCommand('copy')
-      document.body.removeChild(textareaC)
-      if(res) {
-        ElMessage.success('复制成功')
-        return
-      }
+  const textareaC = document.createElement('textarea')
+  textareaC.setAttribute('readonly', 'readonly')
+  textareaC.value = text
+  document.body.appendChild(textareaC)
+  textareaC.select()
+  if(document.execCommand) {
+    const res = document.execCommand('copy')
+    document.body.removeChild(textareaC)
+    if(res) {
+      ElMessage.success('复制成功')
+      return
     }
-    ElMessage.error('您的浏览器可能不受支持，请手动复制')
-    ElMessage.warning(text)
-  })
+  }
+  ElMessage.error('您的浏览器可能不受支持，请手动复制')
+  ElMessage.warning(text)
 }
 
 export function toPlay(videoId: string) {
