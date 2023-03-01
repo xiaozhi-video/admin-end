@@ -1,5 +1,6 @@
 <script lang="ts" name="home" setup>
 import { putNicknameApi, putPasswordApi, putPhotoApi } from '/@/api/admin'
+import { hal7DataApi, HalInfo } from '/@/api/data'
 import UploadOne from '/@/components/uploadOne/index.vue'
 import { useThemeConfig } from '/@/stores/themeConfig'
 import { useUserInfo } from '/@/stores/userInfo'
@@ -7,7 +8,7 @@ import { refEl } from '/@/utils'
 import * as echarts from 'echarts'
 import { ElForm, ElMessage, FormRules } from 'element-plus'
 import { storeToRefs } from 'pinia'
-import { markRaw, nextTick, reactive, ref, watch } from 'vue'
+import { markRaw, nextTick, onMounted, reactive, ref, watch } from 'vue'
 
 // 定义变量内容
 const homeLineRef = ref()
@@ -67,6 +68,8 @@ const state = reactive({
   },
 })
 
+const hal7List = ref<HalInfo[]>([])
+
 // 折线图
 const initLineChart = () => {
   if(!state.global.dispose.some((b: any) => b === state.global.homeChartOne)) state.global.homeChartOne.dispose()
@@ -74,15 +77,15 @@ const initLineChart = () => {
   const option = {
     backgroundColor: state.charts.bgColor,
     title: {
-      text: '政策补贴额度',
+      text: '近七天点赞和浏览量',
       x: 'left',
       textStyle: { fontSize: '15', color: state.charts.color },
     },
-    grid: { top: 70, right: 20, bottom: 30, left: 30 },
+    // grid: { top: 70, right: 20, bottom: 30, left: 30 },
     tooltip: { trigger: 'axis' },
-    legend: { data: [ '预购队列', '最新成交价' ], right: 0 },
+    legend: { data: [ '点赞', '浏览' ], right: 0 },
     xAxis: {
-      data: [ '1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月' ],
+      data: hal7List.value.map(e => e.date),
     },
     yAxis: [
       {
@@ -93,12 +96,12 @@ const initLineChart = () => {
     ],
     series: [
       {
-        name: '预购队列',
+        name: '点赞',
         type: 'line',
         symbolSize: 6,
         symbol: 'circle',
         smooth: true,
-        data: [ 0, 41.1, 30.4, 65.1, 53.3, 53.3, 53.3, 41.1, 30.4, 65.1, 53.3, 10 ],
+        data: hal7List.value.map(e => e.like),
         lineStyle: { color: '#fe9a8b' },
         itemStyle: { color: '#fe9a8b', borderColor: '#fe9a8b' },
         areaStyle: {
@@ -109,12 +112,12 @@ const initLineChart = () => {
         },
       },
       {
-        name: '最新成交价',
+        name: '浏览',
         type: 'line',
         symbolSize: 6,
         symbol: 'circle',
         smooth: true,
-        data: [ 0, 24.1, 7.2, 15.5, 42.4, 42.4, 42.4, 24.1, 7.2, 15.5, 42.4, 0 ],
+        data: hal7List.value.map(e => e.history),
         lineStyle: { color: '#9E87FF' },
         itemStyle: { color: '#9E87FF', borderColor: '#9E87FF' },
         areaStyle: {
@@ -149,6 +152,15 @@ const initLineChart = () => {
   state.global.homeChartOne.setOption(option)
   state.myCharts.push(state.global.homeChartOne)
 }
+
+onMounted(async () => {
+  const { data, status } = await hal7DataApi()
+  if(status === 200) {
+    hal7List.value = data.data
+    initLineChart()
+  }
+})
+
 // 监听 pinia 中是否开启深色主题
 watch(
     () => themeConfig.value.isIsDark,
@@ -164,7 +176,6 @@ watch(
     },
     {
       deep: true,
-      immediate: true,
     },
 )
 
@@ -271,38 +282,38 @@ const putPass = async () => {
         </div>
       </el-col>
       <el-col :lg="8" :md="10" :sm="10" :xl="8" :xs="24" class="home-media">
-          <el-scrollbar class="home-card-item h2">
-            <el-form ref="formEl" :model="form" :rules="rules" inline @submit.native.prevent>
-              <el-form-item class="mb0" prop="photo">
-                <UploadOne :path="form.photo" :url="storesUser.userInfos.photo"
-                           style="width: 80px; height: 80px;" @success="uploadPhoto"/>
-              </el-form-item>
-              <el-form-item class="mb0" prop="nickname">
-                <input v-model="form.nickname" class="inp" @change="putName"/>
-              </el-form-item>
-            </el-form>
-            <div style="margin: 16px 0;">
-              <h4 style="display: inline-block">
-                我的权限:
-              </h4>
-              <el-tag v-for="item in storesUser.userInfos.permissionsDescription" :key="item"
-                      class="permissions">
-                {{ item }}
-              </el-tag>
-            </div>
-            <h4 class="mb16">修改密码:</h4>
-            <el-form ref="formEl2" :model="form2" :rules="rules2">
-              <el-form-item label="旧密码" prop="oldPassword">
-                <el-input v-model="form2.oldPassword" maxlength="32" show-password type="password"/>
-              </el-form-item>
-              <el-form-item label="新密码" prop="newPassword">
-                <el-input v-model="form2.newPassword" maxlength="32" show-password type="password"/>
-              </el-form-item>
-            </el-form>
-            <div class="submit-box">
-              <el-button type="primary" @click="putPass">提交</el-button>
-            </div>
-          </el-scrollbar>
+        <el-scrollbar class="home-card-item h2">
+          <el-form ref="formEl" :model="form" :rules="rules" inline @submit.native.prevent>
+            <el-form-item class="mb0" prop="photo">
+              <UploadOne :path="form.photo" :url="storesUser.userInfos.photo"
+                         style="width: 80px; height: 80px;" @success="uploadPhoto"/>
+            </el-form-item>
+            <el-form-item class="mb0" prop="nickname">
+              <input v-model="form.nickname" class="inp" @change="putName"/>
+            </el-form-item>
+          </el-form>
+          <div style="margin: 16px 0;">
+            <h4 style="display: inline-block">
+              我的权限:
+            </h4>
+            <el-tag v-for="item in storesUser.userInfos.permissionsDescription" :key="item"
+                    class="permissions">
+              {{ item }}
+            </el-tag>
+          </div>
+          <h4 class="mb16">修改密码:</h4>
+          <el-form ref="formEl2" :model="form2" :rules="rules2">
+            <el-form-item label="旧密码" prop="oldPassword">
+              <el-input v-model="form2.oldPassword" maxlength="32" show-password type="password"/>
+            </el-form-item>
+            <el-form-item label="新密码" prop="newPassword">
+              <el-input v-model="form2.newPassword" maxlength="32" show-password type="password"/>
+            </el-form-item>
+          </el-form>
+          <div class="submit-box">
+            <el-button type="primary" @click="putPass">提交</el-button>
+          </div>
+        </el-scrollbar>
       </el-col>
     </el-row>
   </div>
